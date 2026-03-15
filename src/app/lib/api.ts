@@ -8,7 +8,7 @@ import { openClawAPI, transformSessionData } from './openclaw-api'
 
 // Configuration  
 const OPENCLAW_API_BASE = process.env.NEXT_PUBLIC_OPENCLAW_API_BASE || 'http://localhost:8000'
-const REFRESH_INTERVAL = 30000 // 30 seconds as requested
+const REFRESH_INTERVAL = 15000 // 15 seconds for enhanced real-time updates
 
 // Types
 export interface AgentStatus {
@@ -94,11 +94,11 @@ async function fetchOpenClawSessions(): Promise<SessionData[]> {
     return transformSessionData(response.sessions)
   } catch (error) {
     console.error('Error fetching OpenClaw sessions:', error)
-    // Fallback to demo data if API fails
+    // Enhanced fallback data - Full organizational structure
     return [
       {
         id: 'main',
-        title: 'MideSquare (Main)',
+        title: 'MideSquare (CEO)',
         channel: 'webchat',
         model: 'Claude Sonnet 4',
         tokensUsed: 45230,
@@ -107,23 +107,93 @@ async function fetchOpenClawSessions(): Promise<SessionData[]> {
         isMain: true
       },
       {
-        id: 'rusty',
-        title: 'Bobo (CTO) - Mission Control',
-        channel: 'subagent',
+        id: 'bobo',
+        title: 'Bobo (CTO-Software)',
+        channel: 'agent',
         model: 'Claude Sonnet 4', 
         tokensUsed: 28150,
         tokensMax: 200000,
-        lastActive: new Date(),
+        lastActive: new Date(Date.now() - 1000 * 60 * 1),
         isMain: false
       },
       {
-        id: 'emmanuel',
-        title: 'Emmanuel (Developer)',
-        channel: 'terminal',
+        id: 'bimbo',
+        title: 'Bimbo (PM-Content)',
+        channel: 'agent',
         model: 'Claude Sonnet 4',
-        tokensUsed: 12840,
+        tokensUsed: 19420,
         tokensMax: 200000,
         lastActive: new Date(Date.now() - 1000 * 60 * 8),
+        isMain: false
+      },
+      {
+        id: 'pajimo',
+        title: 'Pajimo (PM-Mercor)',
+        channel: 'agent',
+        model: 'Claude Sonnet 4',
+        tokensUsed: 32180,
+        tokensMax: 200000,
+        lastActive: new Date(Date.now() - 1000 * 60 * 3),
+        isMain: false
+      },
+      {
+        id: 'rusty',
+        title: 'Rusty (Software Specialist)',
+        channel: 'agent',
+        model: 'Claude Sonnet 4',
+        tokensUsed: 15680,
+        tokensMax: 200000,
+        lastActive: new Date(Date.now() - 1000 * 60 * 1),
+        isMain: false
+      },
+      {
+        id: 'auditor',
+        title: 'Auditor (Quality Control)',
+        channel: 'agent',
+        model: 'Claude Sonnet 4',
+        tokensUsed: 8940,
+        tokensMax: 200000,
+        lastActive: new Date(Date.now() - 1000 * 60 * 12),
+        isMain: false
+      },
+      {
+        id: 'qc-judge',
+        title: 'QC Judge (Quality Assessment)',
+        channel: 'agent',
+        model: 'Claude Sonnet 4',
+        tokensUsed: 11230,
+        tokensMax: 200000,
+        lastActive: new Date(Date.now() - 1000 * 60 * 7),
+        isMain: false
+      },
+      {
+        id: 'narrator',
+        title: 'Narrator (Technical Documentation)',
+        channel: 'agent',
+        model: 'Claude Sonnet 4',
+        tokensUsed: 7850,
+        tokensMax: 200000,
+        lastActive: new Date(Date.now() - 1000 * 60 * 15),
+        isMain: false
+      },
+      {
+        id: 'architect',
+        title: 'Architect (Solution Design)',
+        channel: 'agent',
+        model: 'Claude Sonnet 4',
+        tokensUsed: 18920,
+        tokensMax: 200000,
+        lastActive: new Date(Date.now() - 1000 * 60 * 4),
+        isMain: false
+      },
+      {
+        id: 'rubricist',
+        title: 'Rubricist (Evaluation Framework)',
+        channel: 'agent',
+        model: 'Claude Sonnet 4',
+        tokensUsed: 9750,
+        tokensMax: 200000,
+        lastActive: new Date(Date.now() - 1000 * 60 * 9),
         isMain: false
       }
     ]

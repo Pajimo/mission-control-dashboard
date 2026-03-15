@@ -401,22 +401,35 @@ export default function AgentsPage() {
                   <Bot className="h-4 w-4" />
                   Agents
                 </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                <Link href="/chart" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
+                  <GitBranch className="h-4 w-4" />
+                  Org Chart
+                </Link>
+                <button 
+                  onClick={() => setViewMode(viewMode === 'hierarchy' ? 'list' : 'hierarchy')}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Users className="h-4 w-4" />
-                  Teams
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  {viewMode === 'hierarchy' ? 'Switch to List' : 'Switch to Hierarchy'}
+                </button>
+                <button 
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Activity className="h-4 w-4" />
-                  Activity
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  Back to Top
+                </button>
+                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
                   <Network className="h-4 w-4" />
-                  Gateways
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  System Status
+                </Link>
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Settings className="h-4 w-4" />
-                  Settings
-                </a>
+                  Refresh View
+                </button>
               </div>
             </div>
           </nav>

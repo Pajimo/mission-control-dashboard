@@ -271,30 +271,45 @@ export default function MissionControlDashboard() {
                   <LayoutGrid className="h-4 w-4" />
                   Dashboard
                 </a>
-                <Link href="/agents" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                <Link href="/agents" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
                   <Bot className="h-4 w-4" />
                   Agents
                 </Link>
-                <Link href="/chart" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                <Link href="/chart" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
                   <GitBranch className="h-4 w-4" />
                   Org Chart
                 </Link>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                <Link href="/agents" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
                   <Users className="h-4 w-4" />
                   Teams
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                </Link>
+                <button 
+                  onClick={() => {
+                    const element = document.querySelector('[data-activity]') as HTMLElement;
+                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Activity className="h-4 w-4" />
                   Activity
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                </button>
+                <button 
+                  onClick={() => {
+                    const element = document.querySelector('[data-status]') as HTMLElement;
+                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Network className="h-4 w-4" />
-                  Gateways
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  System Status
+                </button>
+                <button 
+                  onClick={fetchData}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Settings className="h-4 w-4" />
-                  Settings
-                </a>
+                  Refresh Data
+                </button>
               </div>
             </div>
           </nav>
@@ -334,6 +349,148 @@ export default function MissionControlDashboard() {
                 accent="emerald"
                 info="Based on last 7 days"
               />
+            </div>
+
+            {/* ENHANCED: Organizational Overview - High Priority Display */}
+            <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="mb-6 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 p-2">
+                    <GitBranch className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900">Organizational Structure</h2>
+                    <p className="text-sm text-slate-500">Live agent hierarchy and department status</p>
+                  </div>
+                </div>
+                <Link 
+                  href="/chart" 
+                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
+                >
+                  <GitBranch className="h-4 w-4" />
+                  View Full Chart
+                </Link>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {/* Software Department */}
+                <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="rounded-lg bg-blue-100 p-2">
+                      <Cpu className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-blue-800">Software Department</h3>
+                      <p className="text-sm text-blue-600">Bobo (CTO) + 1 specialist</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-blue-700">Status:</span>
+                      <span className="inline-flex items-center gap-1 text-blue-800 font-medium">
+                        <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
+                        Operational
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-blue-700">Active:</span>
+                      <span className="inline-flex items-center gap-1 text-blue-800 font-medium">
+                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                        2/2 agents
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content Department */}
+                <div className="rounded-lg border border-purple-200 bg-gradient-to-r from-purple-50 to-violet-50 p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="rounded-lg bg-purple-100 p-2">
+                      <Users className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-purple-800">Content Department</h3>
+                      <p className="text-sm text-purple-600">Bimbo (PM) + specialists</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-purple-700">Status:</span>
+                      <span className="inline-flex items-center gap-1 text-purple-800 font-medium">
+                        <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
+                        Operational
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-purple-700">Active:</span>
+                      <span className="inline-flex items-center gap-1 text-purple-800 font-medium">
+                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                        1/1 agents
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mercor Division */}
+                <div className="rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="rounded-lg bg-emerald-100 p-2">
+                      <Shield className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-emerald-800">Mercor Division</h3>
+                      <p className="text-sm text-emerald-600">Pajimo (PM) + 5 specialists</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-700">Status:</span>
+                      <span className="inline-flex items-center gap-1 text-emerald-800 font-medium">
+                        <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
+                        Operational
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-700">Active:</span>
+                      <span className="inline-flex items-center gap-1 text-emerald-800 font-medium">
+                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                        6/6 agents
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CEO Overview */}
+              <div className="mt-6 pt-6 border-t border-slate-200">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-lg bg-gradient-to-r from-amber-100 to-yellow-100 border-2 border-amber-300 p-3">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-lg bg-amber-100 p-2">
+                        <Zap className="h-5 w-5 text-amber-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-amber-800">MideSquare (CEO)</h4>
+                        <p className="text-sm text-amber-600">Strategic oversight • Full organizational authority</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1 grid grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <span className="text-slate-500">Total Agents:</span>
+                      <span className="ml-2 font-semibold text-slate-800">{data.agents.total}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Departments:</span>
+                      <span className="ml-2 font-semibold text-slate-800">3 + Executive</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Oversight:</span>
+                      <span className="ml-2 font-semibold text-emerald-600">100% coverage</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Info Blocks */}
@@ -389,7 +546,7 @@ export default function MissionControlDashboard() {
               </div>
 
               {/* Recent Activity */}
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div data-activity className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
                   <button className="inline-flex items-center gap-1 text-xs text-slate-500 transition hover:text-slate-700">
@@ -456,7 +613,7 @@ export default function MissionControlDashboard() {
             </div>
 
             {/* Live Status Bar */}
-            <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div data-status className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">

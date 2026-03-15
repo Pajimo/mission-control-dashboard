@@ -291,22 +291,37 @@ export default function OrganizationalChart() {
                   <GitBranch className="h-4 w-4" />
                   Org Chart
                 </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                <button 
+                  onClick={() => {
+                    const element = document.querySelector('[data-legend]') as HTMLElement;
+                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Users className="h-4 w-4" />
-                  Teams
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  View Legend
+                </button>
+                <button 
+                  onClick={() => {
+                    const element = document.querySelector('[data-departments]') as HTMLElement;
+                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Activity className="h-4 w-4" />
-                  Activity
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  Dept Summary
+                </button>
+                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
                   <Network className="h-4 w-4" />
-                  Gateways
-                </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  Dashboard
+                </Link>
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+                >
                   <Settings className="h-4 w-4" />
-                  Settings
-                </a>
+                  Refresh Chart
+                </button>
               </div>
             </div>
           </nav>
@@ -316,7 +331,7 @@ export default function OrganizationalChart() {
         <main className="flex-1 overflow-y-auto">
           <div className="p-8">
             {/* Legend */}
-            <div className="mb-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div data-legend className="mb-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Legend</h3>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 <div className="flex items-center gap-3">
@@ -388,7 +403,7 @@ export default function OrganizationalChart() {
             </div>
 
             {/* Department Summary */}
-            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div data-departments className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
               {/* Software Department */}
               <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
