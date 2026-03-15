@@ -4,8 +4,18 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "start": "next start",
-    "dev": "next dev"
+    "start": "next start", 
+    "dev": "next dev",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "test:ci": "playwright test --reporter=html,junit",
+    "test:accessibility": "playwright test e2e/tests/accessibility.spec.ts",
+    "test:performance": "playwright test e2e/tests/performance.spec.ts",
+    "test:visual": "playwright test e2e/tests/visual-regression.spec.ts",
+    "test:update-screenshots": "playwright test --update-snapshots"
   },
   "dependencies": {
     "next": "^14.0.0",
@@ -27,6 +37,8 @@
     "tailwindcss": "^3.4.19",
     "typescript": "^5",
     "eslint": "^8",
-    "eslint-config-next": "^14.0.0"
+    "eslint-config-next": "^14.0.0",
+    "@playwright/test": "^1.49.0",
+    "@axe-core/playwright": "^4.10.2"
   }
 }
