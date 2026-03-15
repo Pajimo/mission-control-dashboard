@@ -19,8 +19,10 @@ import {
   Database,
   Network,
   Cpu,
-  RefreshCw
+  RefreshCw,
+  GitBranch
 } from 'lucide-react'
+import Link from 'next/link'
 
 import { fetchDashboardData, type DashboardData } from './lib/api'
 
@@ -269,10 +271,14 @@ export default function MissionControlDashboard() {
                   <LayoutGrid className="h-4 w-4" />
                   Dashboard
                 </a>
-                <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                <Link href="/agents" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
                   <Bot className="h-4 w-4" />
                   Agents
-                </a>
+                </Link>
+                <Link href="/chart" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
+                  <GitBranch className="h-4 w-4" />
+                  Org Chart
+                </Link>
                 <a href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
                   <Users className="h-4 w-4" />
                   Teams
