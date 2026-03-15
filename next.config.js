@@ -1,10 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // GitHub Pages configuration
+  // Local development configuration - no basePath
   output: 'export',
   trailingSlash: true,
-  basePath: '/mission-control-dashboard',
-  assetPrefix: '/mission-control-dashboard/',
   images: {
     unoptimized: true
   }
