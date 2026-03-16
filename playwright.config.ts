@@ -14,7 +14,7 @@ export default defineConfig({
     ["junit", { outputFile: "results.xml" }]
   ],
   use: {
-    baseURL: "https://pajimo.github.io/mission-control-dashboard/",
+    baseURL: "http://localhost:3001", // Use local static server for testing
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -50,5 +50,11 @@ export default defineConfig({
         colorScheme: 'dark',
       },
     }
-  ]
+  ],
+  webServer: {
+    command: 'npx http-server out -p 3001',
+    url: 'http://localhost:3001',
+    reuseExistingServer: !process.env.CI,
+    timeout: 30000
+  }
 });
