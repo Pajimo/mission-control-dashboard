@@ -5,9 +5,9 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  // GitHub Pages configuration
-  basePath: '/mission-control-dashboard',
-  assetPrefix: '/mission-control-dashboard/',
+  // Netlify deployment configuration (no basePath needed)
+  // basePath: '/mission-control-dashboard', // Removed for Netlify
+  // assetPrefix: '/mission-control-dashboard/', // Removed for Netlify
 }
 
 module.exports = nextConfig
