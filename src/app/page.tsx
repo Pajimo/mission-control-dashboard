@@ -20,15 +20,19 @@ import {
   Network,
   Cpu,
   RefreshCw,
-  GitBranch
+  GitBranch,
+  Command,
+  Eye,
+  Terminal,
+  Gauge
 } from 'lucide-react'
 import Link from 'next/link'
 
 import { fetchDashboardData, type DashboardData } from './lib/api'
 
 const formatNumber = (num: number) => {
-  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}m`
-  if (num >= 1000) return `${(num / 1000).toFixed(1)}k`
+  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
+  if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
   return num.toString()
 }
 
@@ -38,9 +42,9 @@ const formatRelativeTime = (date: Date) => {
   const minutes = Math.floor(diff / 60000)
   const hours = Math.floor(diff / 3600000)
   
-  if (hours > 0) return `${hours}h ago`
-  if (minutes > 0) return `${minutes}m ago`
-  return 'just now'
+  if (hours > 0) return `${hours}H`
+  if (minutes > 0) return `${minutes}M`
+  return 'NOW'
 }
 
 interface MetricCardProps {
@@ -48,95 +52,120 @@ interface MetricCardProps {
   value: string
   secondary?: string
   icon: React.ReactNode
-  accent: 'blue' | 'green' | 'violet' | 'emerald'
+  accent: 'command' | 'operational' | 'critical' | 'intel'
   info?: string
 }
 
 const MetricCard = ({ title, value, secondary, icon, accent, info }: MetricCardProps) => {
-  const iconColors: Record<MetricCardProps['accent'], string> = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-emerald-50 text-emerald-600',
-    violet: 'bg-violet-50 text-violet-600',
-    emerald: 'bg-green-50 text-green-600'
+  const accentStyles: Record<MetricCardProps['accent'], string> = {
+    command: 'bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-600',
+    operational: 'bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600', 
+    critical: 'bg-gradient-to-br from-red-400 via-pink-500 to-purple-600',
+    intel: 'bg-gradient-to-br from-blue-400 via-cyan-500 to-indigo-600'
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-1.5">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {title}
-            </p>
-            {info && (
-              <span title={info}>
-                <Info className="h-3.5 w-3.5 text-slate-400" />
-              </span>
-            )}
+    <div className="group relative overflow-hidden">
+      {/* Background Grid Pattern */}
+      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm border border-slate-700/50" 
+           style={{
+             backgroundImage: `
+               linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+               linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px)
+             `,
+             backgroundSize: '20px 20px'
+           }}>
+      </div>
+      
+      {/* Main Content */}
+      <div className="relative z-10 p-6 h-full">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            {/* Title with accent line */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className={`h-1 w-8 ${accentStyles[accent]} rounded-full`}></div>
+              <h3 className="text-xs font-black uppercase tracking-[0.15em] text-slate-300 font-mono">
+                {title}
+              </h3>
+              {info && (
+                <Info className="h-3 w-3 text-slate-500 hover:text-slate-300 transition-colors cursor-help" />
+              )}
+            </div>
+            
+            {/* Value */}
+            <div className="space-y-1">
+              <div className="text-3xl font-black text-white font-mono tracking-tight leading-none">
+                {value}
+              </div>
+              {secondary && (
+                <div className="text-xs text-slate-400 font-medium">
+                  {secondary}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="mt-2 flex items-end gap-2">
-            <p className="font-heading text-4xl font-bold text-slate-900">{value}</p>
-            {secondary && (
-              <p className="pb-1 text-xs text-slate-500">{secondary}</p>
-            )}
+          
+          {/* Icon */}
+          <div className={`w-12 h-12 rounded-lg ${accentStyles[accent]} flex items-center justify-center shadow-lg`}>
+            {icon}
           </div>
         </div>
-        <div className={`rounded-lg p-2 ${iconColors[accent]}`}>
-          {icon}
+        
+        {/* Status Indicator */}
+        <div className="mt-4 flex items-center gap-2">
+          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+          <span className="text-[10px] text-slate-400 uppercase font-mono tracking-wider">OPERATIONAL</span>
         </div>
       </div>
+      
+      {/* Hover Effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
     </div>
   )
 }
 
-interface InfoBlockProps {
+interface CommandBlockProps {
   title: string
   badge?: {
     text: string
-    tone: 'online' | 'offline' | 'neutral'
+    tone: 'active' | 'standby' | 'alert' | 'neutral'
   }
-  rows: Array<{
-    label: string
-    value: string
-    tone?: 'success' | 'warning' | 'danger' | 'default'
-  }>
+  children: React.ReactNode
 }
 
-const InfoBlock = ({ title, badge, rows }: InfoBlockProps) => {
+const CommandBlock = ({ title, badge, children }: CommandBlockProps) => {
+  const badgeStyles = {
+    active: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
+    standby: 'bg-amber-500/20 text-amber-300 border-amber-400/30',
+    alert: 'bg-red-500/20 text-red-300 border-red-400/30',
+    neutral: 'bg-slate-500/20 text-slate-300 border-slate-400/30'
+  }
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-        {badge && (
-          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${
-            badge.tone === 'online' ? 'bg-emerald-100 text-emerald-700' :
-            badge.tone === 'offline' ? 'bg-rose-100 text-rose-700' :
-            'bg-slate-200 text-slate-700'
-          }`}>
-            {badge.text}
-          </span>
-        )}
-      </div>
-      <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
-        {rows.map((row, index: number) => (
-          <div key={index} className="flex items-start justify-between gap-3 px-3 py-2">
-            <span className="min-w-0 text-sm text-slate-500">{row.label}</span>
-            <span className={`max-w-[65%] break-words text-right text-sm font-medium leading-5 ${
-              row.tone === 'success' ? 'text-emerald-700' :
-              row.tone === 'warning' ? 'text-amber-700' :
-              row.tone === 'danger' ? 'text-rose-700' :
-              'text-slate-800'
-            }`}>
-              {row.value}
+    <div className="relative overflow-hidden bg-slate-900/60 border border-slate-700/50 backdrop-blur-sm">
+      {/* Header */}
+      <div className="p-4 border-b border-slate-700/50 bg-slate-800/50">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-black text-white uppercase tracking-[0.1em] font-mono">
+            {title}
+          </h3>
+          {badge && (
+            <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border font-mono ${badgeStyles[badge.tone]}`}>
+              {badge.text}
             </span>
-          </div>
-        ))}
+          )}
+        </div>
+      </div>
+      
+      {/* Content */}
+      <div className="p-4">
+        {children}
       </div>
     </div>
   )
 }
 
-export default function MissionControlDashboard() {
+export default function EnhancedMissionControl() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -152,28 +181,50 @@ export default function MissionControlDashboard() {
       setError(null)
       setLoading(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch data')
+      setError(err instanceof Error ? err.message : 'CONNECTION LOST')
       setLoading(false)
     } finally {
       setIsRefreshing(false)
     }
   }
 
-  // Initial load and auto-refresh every 30 seconds
   useEffect(() => {
     fetchData()
-    
-    const interval = setInterval(fetchData, 30000) // 30 seconds as requested
-    
+    const interval = setInterval(fetchData, 30000)
     return () => clearInterval(interval)
   }, [])
 
   if (loading && !data) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading Mission Control...</p>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-black"></div>
+        <div className="absolute inset-0" 
+             style={{
+               backgroundImage: `
+                 linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+                 linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px)
+               `,
+               backgroundSize: '40px 40px',
+               animation: 'grid-move 20s linear infinite'
+             }}>
+        </div>
+        
+        <div className="relative text-center">
+          <div className="w-16 h-16 mx-auto mb-6">
+            <Command className="w-16 h-16 text-amber-400 animate-pulse" />
+          </div>
+          <h1 className="text-2xl font-black text-white uppercase tracking-[0.2em] font-mono mb-2">
+            INITIALIZING MISSION CONTROL
+          </h1>
+          <div className="text-slate-400 font-mono text-sm tracking-wider">
+            ESTABLISHING SECURE CONNECTION...
+          </div>
+          
+          {/* Loading bar */}
+          <div className="w-64 h-1 bg-slate-800 rounded-full mx-auto mt-6 overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full animate-pulse"></div>
+          </div>
         </div>
       </div>
     )
@@ -181,15 +232,18 @@ export default function MissionControlDashboard() {
 
   if (error && !data) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center">
-          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
-          <p className="mt-4 text-red-600">Error: {error}</p>
+          <AlertTriangle className="h-16 w-16 text-red-400 mx-auto mb-4" />
+          <h1 className="text-xl font-black text-red-400 uppercase tracking-wider font-mono mb-2">
+            SYSTEM ERROR
+          </h1>
+          <p className="text-slate-400 font-mono mb-4">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-6 py-2 bg-red-500 text-white font-mono font-bold uppercase tracking-wider rounded hover:bg-red-600 transition-colors"
           >
-            Retry
+            RETRY CONNECTION
           </button>
         </div>
       </div>
@@ -198,452 +252,231 @@ export default function MissionControlDashboard() {
 
   if (!data) return null
 
-  const workloadRows: InfoBlockProps['rows'] = [
-    { label: 'Total work items', value: formatNumber(data.tasks.total) },
-    { label: 'Inbox', value: formatNumber(data.tasks.inbox) },
-    { label: 'In progress', value: formatNumber(data.tasks.inProgress), tone: data.tasks.inProgress > 0 ? 'warning' as const : 'default' as const },
-    { label: 'In review', value: formatNumber(data.tasks.review) },
-    { label: 'Completed', value: formatNumber(data.tasks.completed), tone: 'success' as const }
-  ]
-
-  const performanceRows: InfoBlockProps['rows'] = [
-    { label: 'Completed tasks', value: formatNumber(data.tasks.completed) },
-    { label: 'Average throughput', value: `${data.performance.completionRate.toFixed(1)}/day` },
-    { label: 'Error rate', value: `${data.performance.errorRate.toFixed(1)}%`, tone: data.performance.errorRate < 2 ? 'success' as const : 'warning' as const },
-    { label: 'Avg response time', value: `${data.performance.averageResponse.toFixed(0)}ms` },
-    { label: 'System health', value: 'Operational', tone: 'success' as const }
-  ]
-
-  const gatewayRows: InfoBlockProps['rows'] = [
-    { label: 'Gateway status', value: data.gateways.status === 'operational' ? 'All connected' : 'Issues detected', tone: data.gateways.status === 'operational' ? 'success' as const : 'warning' as const },
-    { label: 'Configured gateways', value: formatNumber(data.gateways.total) },
-    { label: 'Connected gateways', value: formatNumber(data.gateways.connected), tone: 'success' as const },
-    { label: 'Unavailable gateways', value: String(data.gateways.total - data.gateways.connected), tone: data.gateways.total === data.gateways.connected ? 'success' as const : 'warning' as const },
-    { label: 'System uptime', value: data.system.uptime, tone: 'success' as const }
-  ]
-
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="rounded-lg p-2 hover:bg-slate-100 lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 p-2">
-                <Zap className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-slate-900">OpenClaw Mission Control</h1>
-                <p className="text-sm text-slate-500">Live Dynamic Data · v2.0</p>
+    <div className="min-h-screen bg-slate-950 text-white relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-black"></div>
+      <div className="fixed inset-0" 
+           style={{
+             backgroundImage: `
+               linear-gradient(rgba(148, 163, 184, 0.02) 1px, transparent 1px),
+               linear-gradient(90deg, rgba(148, 163, 184, 0.02) 1px, transparent 1px)
+             `,
+             backgroundSize: '50px 50px'
+           }}>
+      </div>
+
+      {/* Header Command Bar */}
+      <header className="relative z-20 border-b border-slate-800/50 bg-slate-900/80 backdrop-blur-xl">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 hover:bg-slate-800 rounded-lg transition-colors lg:hidden"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              
+              {/* Command Identity */}
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg">
+                  <Command className="h-7 w-7 text-slate-900" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-black uppercase tracking-[0.15em] font-mono text-white">
+                    MISSION CONTROL
+                  </h1>
+                  <div className="text-xs text-slate-400 font-mono tracking-wider">
+                    OPENCLAW COMMAND INTERFACE • v2.0 • ENHANCED
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={fetchData}
-              disabled={isRefreshing}
-              className="flex items-center gap-1 rounded-lg px-3 py-1 text-sm text-slate-600 hover:bg-slate-100"
-            >
-              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Refreshing...' : 'Refresh'}
-            </button>
-            <div className="flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">
-              <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-              Live Data Active
+            
+            {/* Control Panel */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={fetchData}
+                disabled={isRefreshing}
+                className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-colors"
+              >
+                <RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+                {isRefreshing ? 'SYNCING...' : 'REFRESH'}
+              </button>
+              
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/20 border border-emerald-400/30 rounded-lg">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">
+                  LIVE FEED ACTIVE
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 transform border-r border-slate-200 bg-white transition-transform lg:relative lg:translate-x-0`}>
-          <nav className="flex h-full flex-col">
-            <div className="p-4">
-              <div className="space-y-1">
-                <a href="#" className="flex items-center gap-3 rounded-lg bg-blue-50 px-3 py-2 text-blue-700">
-                  <LayoutGrid className="h-4 w-4" />
-                  Dashboard
-                </a>
-                <Link href="/agents" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
-                  <Bot className="h-4 w-4" />
-                  Agents
-                </Link>
-                <Link href="/chart" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
-                  <GitBranch className="h-4 w-4" />
-                  Org Chart
-                </Link>
-                <Link href="/agents" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
-                  <Users className="h-4 w-4" />
-                  Teams
-                </Link>
-                <button 
-                  onClick={() => {
-                    const element = document.querySelector('[data-activity]') as HTMLElement;
-                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
-                  }}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Activity className="h-4 w-4" />
-                  Activity
-                </button>
-                <button 
-                  onClick={() => {
-                    const element = document.querySelector('[data-status]') as HTMLElement;
-                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
-                  }}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Network className="h-4 w-4" />
-                  System Status
-                </button>
-                <button 
-                  onClick={fetchData}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Settings className="h-4 w-4" />
-                  Refresh Data
-                </button>
-              </div>
+      <div className="flex relative z-10">
+        {/* Command Sidebar */}
+        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-30 w-72 transform border-r border-slate-800/50 bg-slate-900/90 backdrop-blur-xl transition-transform lg:relative lg:translate-x-0`}>
+          <nav className="flex h-full flex-col p-6">
+            <div className="space-y-2">
+              <a href="#" className="flex items-center gap-3 px-4 py-3 bg-amber-500/20 border border-amber-400/30 rounded-lg text-amber-300 font-mono font-bold text-sm uppercase tracking-wider">
+                <Eye className="h-4 w-4" />
+                OVERVIEW
+              </a>
+              <Link href="/agents" className="flex items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-300 font-mono font-medium text-sm uppercase tracking-wider transition-colors">
+                <Bot className="h-4 w-4" />
+                AGENTS
+              </Link>
+              <Link href="/chart" className="flex items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-300 font-mono font-medium text-sm uppercase tracking-wider transition-colors">
+                <GitBranch className="h-4 w-4" />
+                ORG STRUCTURE
+              </Link>
+              <button className="flex w-full items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-300 font-mono font-medium text-sm uppercase tracking-wider transition-colors">
+                <Users className="h-4 w-4" />
+                TEAMS
+              </button>
+              <button className="flex w-full items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-300 font-mono font-medium text-sm uppercase tracking-wider transition-colors">
+                <Activity className="h-4 w-4" />
+                OPERATIONS
+              </button>
+              <button className="flex w-full items-center gap-3 px-4 py-3 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-300 font-mono font-medium text-sm uppercase tracking-wider transition-colors">
+                <Terminal className="h-4 w-4" />
+                SYSTEM
+              </button>
             </div>
           </nav>
         </aside>
 
-        {/* Main Content */}
+        {/* Main Command Center */}
         <main className="flex-1 overflow-y-auto">
-          <div className="p-8">
-            {/* Top Metrics */}
+          <div className="p-8 space-y-8">
+            {/* Tactical Metrics */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
               <MetricCard
-                title="Online Agents"
+                title="ACTIVE AGENTS"
                 value={formatNumber(data.agents.online)}
-                secondary={`${formatNumber(data.agents.total)} total`}
-                icon={<Bot className="h-4 w-4" />}
-                accent="blue"
+                secondary={`${formatNumber(data.agents.total)} DEPLOYED`}
+                icon={<Bot className="h-6 w-6 text-slate-900" />}
+                accent="command"
               />
               <MetricCard
-                title="Tasks In Progress"
+                title="OPERATIONS"
                 value={formatNumber(data.tasks.inProgress)}
-                secondary={`${formatNumber(data.tasks.total)} total`}
-                icon={<LayoutGrid className="h-4 w-4" />}
-                accent="green"
+                secondary={`${formatNumber(data.tasks.total)} TOTAL`}
+                icon={<Gauge className="h-6 w-6 text-slate-900" />}
+                accent="operational"
               />
               <MetricCard
-                title="Error Rate"
+                title="ERROR RATE"
                 value={`${data.performance.errorRate.toFixed(1)}%`}
-                secondary={`${formatNumber(data.tasks.completed)} completed`}
-                icon={<Activity className="h-4 w-4" />}
-                accent="violet"
+                secondary={`${formatNumber(data.tasks.completed)} COMPLETE`}
+                icon={<Shield className="h-6 w-6 text-slate-900" />}
+                accent="critical"
               />
               <MetricCard
-                title="Completion Speed"
-                value={`${data.performance.completionRate.toFixed(1)}/day`}
-                secondary="Last 7 days"
-                icon={<Timer className="h-4 w-4" />}
-                accent="emerald"
-                info="Based on last 7 days"
+                title="THROUGHPUT"
+                value={`${data.performance.completionRate.toFixed(1)}/DAY`}
+                secondary="7-DAY AVERAGE"
+                icon={<Zap className="h-6 w-6 text-slate-900" />}
+                accent="intel"
+                info="Based on 7-day performance metrics"
               />
             </div>
 
-            {/* ENHANCED: Organizational Overview - High Priority Display */}
-            <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 p-2">
-                    <GitBranch className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-slate-900">Organizational Structure</h2>
-                    <p className="text-sm text-slate-500">Live agent hierarchy and department status</p>
-                  </div>
-                </div>
-                <Link 
-                  href="/chart" 
-                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
-                >
-                  <GitBranch className="h-4 w-4" />
-                  View Full Chart
-                </Link>
-              </div>
-              
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {/* Software Department */}
-                <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="rounded-lg bg-blue-100 p-2">
-                      <Cpu className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-blue-800">Software Department</h3>
-                      <p className="text-sm text-blue-600">Bobo (CTO) + 1 specialist</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-blue-700">Status:</span>
-                      <span className="inline-flex items-center gap-1 text-blue-800 font-medium">
-                        <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-                        Operational
+            {/* Command Blocks */}
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+              <CommandBlock
+                title="WORKLOAD STATUS"
+                badge={{ text: 'OPERATIONAL', tone: 'active' }}
+              >
+                <div className="space-y-3">
+                  {[
+                    { label: 'TOTAL OPERATIONS', value: formatNumber(data.tasks.total), status: 'neutral' },
+                    { label: 'INBOX', value: formatNumber(data.tasks.inbox), status: 'neutral' },
+                    { label: 'IN PROGRESS', value: formatNumber(data.tasks.inProgress), status: data.tasks.inProgress > 0 ? 'active' : 'neutral' },
+                    { label: 'UNDER REVIEW', value: formatNumber(data.tasks.review), status: 'neutral' },
+                    { label: 'COMPLETED', value: formatNumber(data.tasks.completed), status: 'active' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center justify-between py-2 border-b border-slate-700/30 last:border-0">
+                      <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">{item.label}</span>
+                      <span className={`text-sm font-bold font-mono ${
+                        item.status === 'active' ? 'text-emerald-400' : 
+                        item.status === 'alert' ? 'text-red-400' : 'text-slate-300'
+                      }`}>
+                        {item.value}
                       </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-blue-700">Active:</span>
-                      <span className="inline-flex items-center gap-1 text-blue-800 font-medium">
-                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                        2/2 agents
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content Department */}
-                <div className="rounded-lg border border-purple-200 bg-gradient-to-r from-purple-50 to-violet-50 p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="rounded-lg bg-purple-100 p-2">
-                      <Users className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-purple-800">Content Department</h3>
-                      <p className="text-sm text-purple-600">Bimbo (PM) + specialists</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-purple-700">Status:</span>
-                      <span className="inline-flex items-center gap-1 text-purple-800 font-medium">
-                        <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-                        Operational
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-purple-700">Active:</span>
-                      <span className="inline-flex items-center gap-1 text-purple-800 font-medium">
-                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                        1/1 agents
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mercor Division */}
-                <div className="rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="rounded-lg bg-emerald-100 p-2">
-                      <Shield className="h-5 w-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-emerald-800">Mercor Division</h3>
-                      <p className="text-sm text-emerald-600">Pajimo (PM) + 5 specialists</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-emerald-700">Status:</span>
-                      <span className="inline-flex items-center gap-1 text-emerald-800 font-medium">
-                        <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-                        Operational
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-emerald-700">Active:</span>
-                      <span className="inline-flex items-center gap-1 text-emerald-800 font-medium">
-                        <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                        6/6 agents
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* CEO Overview */}
-              <div className="mt-6 pt-6 border-t border-slate-200">
-                <div className="flex items-center gap-4">
-                  <div className="rounded-lg bg-gradient-to-r from-amber-100 to-yellow-100 border-2 border-amber-300 p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-amber-100 p-2">
-                        <Zap className="h-5 w-5 text-amber-600" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-amber-800">MideSquare (CEO)</h4>
-                        <p className="text-sm text-amber-600">Strategic oversight • Full organizational authority</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-1 grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <span className="text-slate-500">Total Agents:</span>
-                      <span className="ml-2 font-semibold text-slate-800">{data.agents.total}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500">Departments:</span>
-                      <span className="ml-2 font-semibold text-slate-800">3 + Executive</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500">Oversight:</span>
-                      <span className="ml-2 font-semibold text-emerald-600">100% coverage</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Info Blocks */}
-            <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
-              <InfoBlock
-                title="Workload"
-                rows={workloadRows}
-              />
-              <InfoBlock
-                title="Performance"
-                rows={performanceRows}
-              />
-              <InfoBlock
-                title="Gateway Health"
-                badge={{ text: data.gateways.status === 'operational' ? 'All connected' : 'Issues', tone: data.gateways.status === 'operational' ? 'online' : 'offline' }}
-                rows={gatewayRows}
-              />
-            </div>
-
-            {/* Sessions, Activity, and Projects */}
-            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Active Sessions */}
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <h3 className="text-lg font-semibold text-slate-900">Active Sessions</h3>
-                  <span className="text-xs text-slate-500">{data.sessions.length}</span>
-                </div>
-                <div className="max-h-[310px] space-y-3 overflow-y-auto">
-                  {data.sessions.map((session) => (
-                    <div key={session.id} className="rounded-lg border border-slate-200 bg-white p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-slate-900">
-                            <span className={`mr-2 inline-block h-2 w-2 rounded-full ${session.isMain ? 'bg-emerald-500' : 'bg-slate-400'}`} />
-                            {session.title}
-                          </p>
-                          <p className="mt-0.5 truncate text-xs text-slate-500">
-                            {session.channel} · {session.model}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs font-medium text-slate-700">
-                            {formatNumber(session.tokensUsed)}/{formatNumber(session.tokensMax)} ({Math.round((session.tokensUsed / session.tokensMax) * 100)}%)
-                          </p>
-                          <p className="text-[11px] text-slate-500">
-                            {formatRelativeTime(session.lastActive)}
-                          </p>
-                        </div>
-                      </div>
                     </div>
                   ))}
                 </div>
-              </div>
+              </CommandBlock>
 
-              {/* Recent Activity */}
-              <div data-activity className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
-                  <button className="inline-flex items-center gap-1 text-xs text-slate-500 transition hover:text-slate-700">
-                    View all
-                    <ArrowUpRight className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-                <div className="max-h-[310px] space-y-3 overflow-y-auto">
-                  {data.activity.map((event) => (
-                    <div key={event.id} className="rounded-lg border border-slate-200 bg-white p-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-slate-900">
-                            {event.message}
-                          </p>
-                          <p className="mt-0.5 text-xs uppercase tracking-wider text-slate-500">
-                            {event.agent ? `${event.agent} · ${event.type}` : event.type}
-                          </p>
-                        </div>
-                        <div className="text-right text-[11px] text-slate-500">
-                          <p>{formatRelativeTime(event.timestamp)}</p>
-                        </div>
-                      </div>
+              <CommandBlock
+                title="PERFORMANCE METRICS"
+                badge={{ text: 'OPTIMAL', tone: 'active' }}
+              >
+                <div className="space-y-3">
+                  {[
+                    { label: 'COMPLETED TASKS', value: formatNumber(data.tasks.completed), status: 'active' },
+                    { label: 'AVG THROUGHPUT', value: `${data.performance.completionRate.toFixed(1)}/DAY`, status: 'neutral' },
+                    { label: 'ERROR RATE', value: `${data.performance.errorRate.toFixed(1)}%`, status: data.performance.errorRate < 2 ? 'active' : 'alert' },
+                    { label: 'RESPONSE TIME', value: `${data.performance.averageResponse.toFixed(0)}MS`, status: 'neutral' },
+                    { label: 'SYSTEM STATUS', value: 'OPERATIONAL', status: 'active' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center justify-between py-2 border-b border-slate-700/30 last:border-0">
+                      <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">{item.label}</span>
+                      <span className={`text-sm font-bold font-mono ${
+                        item.status === 'active' ? 'text-emerald-400' : 
+                        item.status === 'alert' ? 'text-red-400' : 'text-slate-300'
+                      }`}>
+                        {item.value}
+                      </span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </CommandBlock>
 
-              {/* Project Status */}
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <h3 className="text-lg font-semibold text-slate-900">Active Projects</h3>
-                  <span className="text-xs text-slate-500">{data.projects.length}</span>
-                </div>
-                <div className="max-h-[310px] space-y-3 overflow-y-auto">
-                  {data.projects.map((project) => (
-                    <div key={project.name} className="rounded-lg border border-slate-200 bg-white p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-slate-900">
-                            {project.name}
-                          </p>
-                          <p className="mt-0.5 text-xs text-slate-500">
-                            {project.status} · {project.progress}% complete
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <div className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                            project.status === 'active' ? 'bg-emerald-100 text-emerald-700' :
-                            project.status === 'completed' ? 'bg-blue-100 text-blue-700' :
-                            'bg-orange-100 text-orange-700'
-                          }`}>
-                            {project.status}
-                          </div>
-                          <p className="text-[11px] text-slate-500 mt-1">
-                            {formatRelativeTime(project.lastUpdated)}
-                          </p>
-                        </div>
-                      </div>
+              <CommandBlock
+                title="GATEWAY NETWORK"
+                badge={{ text: data.gateways.status === 'operational' ? 'ALL CONNECTED' : 'ISSUES DETECTED', tone: data.gateways.status === 'operational' ? 'active' : 'alert' }}
+              >
+                <div className="space-y-3">
+                  {[
+                    { label: 'GATEWAY STATUS', value: data.gateways.status === 'operational' ? 'ALL CONNECTED' : 'DEGRADED', status: data.gateways.status === 'operational' ? 'active' : 'alert' },
+                    { label: 'ACTIVE GATEWAYS', value: `${formatNumber(data.gateways.connected)}/${formatNumber(data.gateways.total)}`, status: 'active' },
+                    { label: 'NETWORK STATUS', value: 'STABLE', status: 'active' },
+                    { label: 'SYSTEM UPTIME', value: data.system.uptime, status: 'active' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center justify-between py-2 border-b border-slate-700/30 last:border-0">
+                      <span className="text-xs text-slate-400 font-mono uppercase tracking-wider">{item.label}</span>
+                      <span className={`text-sm font-bold font-mono ${
+                        item.status === 'active' ? 'text-emerald-400' : 
+                        item.status === 'alert' ? 'text-red-400' : 'text-slate-300'
+                      }`}>
+                        {item.value}
+                      </span>
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-
-            {/* Live Status Bar */}
-            <div data-status className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
-                    <span className="text-sm font-medium text-slate-900">System Status: {data.system.gatewayStatus}</span>
-                  </div>
-                  <div className="flex items-center gap-6 text-sm text-slate-500">
-                    <div className="flex items-center gap-1">
-                      <Cpu className="h-4 w-4" />
-                      <span>CPU: {data.system.cpuUsage}%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Database className="h-4 w-4" />
-                      <span>Memory: {data.system.memoryUsage}%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Network className="h-4 w-4" />
-                      <span>Network: {data.system.networkStatus}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right text-xs text-slate-500">
-                  <p>Last updated: {data.lastUpdated.toLocaleTimeString()}</p>
-                  <p>Uptime: {data.system.uptime}</p>
-                </div>
-              </div>
+              </CommandBlock>
             </div>
           </div>
         </main>
       </div>
+
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800;900&display=swap');
+        
+        .font-mono {
+          font-family: 'JetBrains Mono', monospace;
+        }
+        
+        @keyframes grid-move {
+          0% { transform: translate(0, 0); }
+          100% { transform: translate(40px, 40px); }
+        }
+      `}</style>
     </div>
   )
 }
