@@ -1,0 +1,250 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e6]:
+          - img [ref=e8]
+          - generic [ref=e10]:
+            - heading "OpenClaw Mission Control" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Live Dynamic Data · v2.0
+        - generic [ref=e13]:
+          - button "Refresh" [ref=e14] [cursor=pointer]:
+            - img [ref=e15]
+            - text: Refresh
+          - generic [ref=e20]: Live Data Active
+    - generic [ref=e22]:
+      - complementary [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e26]:
+            - link "Dashboard" [ref=e27] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e28]
+              - text: Dashboard
+            - link "Agents" [ref=e33] [cursor=pointer]:
+              - /url: /agents/
+              - img [ref=e34]
+              - text: Agents
+            - link "Org Chart" [ref=e37] [cursor=pointer]:
+              - /url: /chart/
+              - img [ref=e38]
+              - text: Org Chart
+            - link "Teams" [ref=e42] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e43]
+              - text: Teams
+            - link "Activity" [ref=e48] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e49]
+              - text: Activity
+            - link "Gateways" [ref=e51] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e52]
+              - text: Gateways
+            - link "Settings" [ref=e57] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e58]
+              - text: Settings
+      - main [ref=e61]:
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - generic [ref=e65]:
+              - generic [ref=e66]:
+                - paragraph [ref=e68]: Online Agents
+                - generic [ref=e69]:
+                  - paragraph [ref=e70]: "3"
+                  - paragraph [ref=e71]: 3 total
+              - img [ref=e73]
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - paragraph [ref=e80]: Tasks In Progress
+                - generic [ref=e81]:
+                  - paragraph [ref=e82]: "5"
+                  - paragraph [ref=e83]: 262 total
+              - img [ref=e85]
+            - generic [ref=e91]:
+              - generic [ref=e92]:
+                - paragraph [ref=e94]: Error Rate
+                - generic [ref=e95]:
+                  - paragraph [ref=e96]: 1.9%
+                  - paragraph [ref=e97]: 247 completed
+              - img [ref=e99]
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]:
+                  - paragraph [ref=e105]: Completion Speed
+                  - generic "Based on last 7 days" [ref=e106]:
+                    - img [ref=e107]
+                - generic [ref=e109]:
+                  - paragraph [ref=e110]: 29.7/day
+                  - paragraph [ref=e111]: Last 7 days
+              - img [ref=e113]
+          - generic [ref=e116]:
+            - generic [ref=e117]:
+              - heading "Workload" [level=3] [ref=e119]
+              - generic [ref=e120]:
+                - generic [ref=e121]:
+                  - generic [ref=e122]: Total work items
+                  - generic [ref=e123]: "262"
+                - generic [ref=e124]:
+                  - generic [ref=e125]: Inbox
+                  - generic [ref=e126]: "8"
+                - generic [ref=e127]:
+                  - generic [ref=e128]: In progress
+                  - generic [ref=e129]: "5"
+                - generic [ref=e130]:
+                  - generic [ref=e131]: In review
+                  - generic [ref=e132]: "2"
+                - generic [ref=e133]:
+                  - generic [ref=e134]: Completed
+                  - generic [ref=e135]: "247"
+            - generic [ref=e136]:
+              - heading "Performance" [level=3] [ref=e138]
+              - generic [ref=e139]:
+                - generic [ref=e140]:
+                  - generic [ref=e141]: Completed tasks
+                  - generic [ref=e142]: "247"
+                - generic [ref=e143]:
+                  - generic [ref=e144]: Average throughput
+                  - generic [ref=e145]: 29.7/day
+                - generic [ref=e146]:
+                  - generic [ref=e147]: Error rate
+                  - generic [ref=e148]: 1.9%
+                - generic [ref=e149]:
+                  - generic [ref=e150]: Avg response time
+                  - generic [ref=e151]: 1071ms
+                - generic [ref=e152]:
+                  - generic [ref=e153]: System health
+                  - generic [ref=e154]: Operational
+            - generic [ref=e155]:
+              - generic [ref=e156]:
+                - heading "Gateway Health" [level=3] [ref=e157]
+                - generic [ref=e158]: All connected
+              - generic [ref=e159]:
+                - generic [ref=e160]:
+                  - generic [ref=e161]: Gateway status
+                  - generic [ref=e162]: All connected
+                - generic [ref=e163]:
+                  - generic [ref=e164]: Configured gateways
+                  - generic [ref=e165]: "7"
+                - generic [ref=e166]:
+                  - generic [ref=e167]: Connected gateways
+                  - generic [ref=e168]: "7"
+                - generic [ref=e169]:
+                  - generic [ref=e170]: Unavailable gateways
+                  - generic [ref=e171]: "0"
+                - generic [ref=e172]:
+                  - generic [ref=e173]: System uptime
+                  - generic [ref=e174]: 2d 14h 23m
+          - generic [ref=e175]:
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - heading "Active Sessions" [level=3] [ref=e178]
+                - generic [ref=e179]: "3"
+              - generic [ref=e180]:
+                - generic [ref=e182]:
+                  - generic [ref=e183]:
+                    - paragraph [ref=e184]: MideSquare Main Session
+                    - paragraph [ref=e186]: webchat · Claude Sonnet 4
+                  - generic [ref=e187]:
+                    - paragraph [ref=e188]: 45.2k/200.0k (23%)
+                    - paragraph [ref=e189]: 2m ago
+                - generic [ref=e191]:
+                  - generic [ref=e192]:
+                    - paragraph [ref=e193]: bobo-dynamic-mission-control
+                    - paragraph [ref=e195]: webchat · Claude Sonnet 4
+                  - generic [ref=e196]:
+                    - paragraph [ref=e197]: 28.1k/200.0k (14%)
+                    - paragraph [ref=e198]: just now
+                - generic [ref=e200]:
+                  - generic [ref=e201]:
+                    - paragraph [ref=e202]: emmanuel-development
+                    - paragraph [ref=e204]: terminal · Claude Sonnet 4
+                  - generic [ref=e205]:
+                    - paragraph [ref=e206]: 12.8k/200.0k (6%)
+                    - paragraph [ref=e207]: 8m ago
+            - generic [ref=e208]:
+              - generic [ref=e209]:
+                - heading "Recent Activity" [level=3] [ref=e210]
+                - button "View all" [ref=e211] [cursor=pointer]:
+                  - text: View all
+                  - img [ref=e212]
+              - generic [ref=e215]:
+                - generic [ref=e217]:
+                  - generic [ref=e218]:
+                    - paragraph [ref=e219]: Dynamic Mission Control v2.0 deployed successfully
+                    - paragraph [ref=e220]: Bobo · info
+                  - paragraph [ref=e222]: just now
+                - generic [ref=e224]:
+                  - generic [ref=e225]:
+                    - paragraph [ref=e226]: Real-time OpenClaw API integration active
+                    - paragraph [ref=e227]: System · info
+                  - paragraph [ref=e229]: 2m ago
+                - generic [ref=e231]:
+                  - generic [ref=e232]:
+                    - paragraph [ref=e233]: Gateway health check passed
+                    - paragraph [ref=e234]: Gateway · info
+                  - paragraph [ref=e236]: 5m ago
+                - generic [ref=e238]:
+                  - generic [ref=e239]:
+                    - paragraph [ref=e240]: Session data synchronization completed
+                    - paragraph [ref=e241]: System · info
+                  - paragraph [ref=e243]: 8m ago
+                - generic [ref=e245]:
+                  - generic [ref=e246]:
+                    - paragraph [ref=e247]: All agents responding normally
+                    - paragraph [ref=e248]: Monitor · info
+                  - paragraph [ref=e250]: 12m ago
+            - generic [ref=e251]:
+              - generic [ref=e252]:
+                - heading "Active Projects" [level=3] [ref=e253]
+                - generic [ref=e254]: "4"
+              - generic [ref=e255]:
+                - generic [ref=e257]:
+                  - generic [ref=e258]:
+                    - paragraph [ref=e259]: DeckBuilder
+                    - paragraph [ref=e260]: active · 85% complete
+                  - generic [ref=e261]:
+                    - generic [ref=e262]: active
+                    - paragraph [ref=e263]: 15m ago
+                - generic [ref=e265]:
+                  - generic [ref=e266]:
+                    - paragraph [ref=e267]: Faith Content
+                    - paragraph [ref=e268]: active · 60% complete
+                  - generic [ref=e269]:
+                    - generic [ref=e270]: active
+                    - paragraph [ref=e271]: 30m ago
+                - generic [ref=e273]:
+                  - generic [ref=e274]:
+                    - paragraph [ref=e275]: LearnCyberFun
+                    - paragraph [ref=e276]: active · 40% complete
+                  - generic [ref=e277]:
+                    - generic [ref=e278]: active
+                    - paragraph [ref=e279]: 45m ago
+                - generic [ref=e281]:
+                  - generic [ref=e282]:
+                    - paragraph [ref=e283]: Mercor
+                    - paragraph [ref=e284]: on-hold · 25% complete
+                  - generic [ref=e285]:
+                    - generic [ref=e286]: on-hold
+                    - paragraph [ref=e287]: 2h ago
+          - generic [ref=e289]:
+            - generic [ref=e290]:
+              - generic [ref=e293]: "System Status: operational"
+              - generic [ref=e294]:
+                - generic [ref=e295]:
+                  - img [ref=e296]
+                  - generic [ref=e299]: "CPU: 56%"
+                - generic [ref=e300]:
+                  - img [ref=e301]
+                  - generic [ref=e305]: "Memory: 63%"
+                - generic [ref=e306]:
+                  - img [ref=e307]
+                  - generic [ref=e312]: "Network: good"
+            - generic [ref=e313]:
+              - paragraph [ref=e314]: "Last updated: 12:24:46 AM"
+              - paragraph [ref=e315]: "Uptime: 2d 14h 23m"
+  - alert [ref=e316]
+```

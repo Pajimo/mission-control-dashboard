@@ -10,14 +10,18 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 3
+    },
     "preserveOutput": "always",
     "projects": [
       {
         "outputDir": "/root/.openclaw/workspace/mission-control-dashboard/test-results",
         "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "/root/.openclaw/workspace/mission-control-dashboard/e2e",
@@ -30,8 +34,10 @@
       {
         "outputDir": "/root/.openclaw/workspace/mission-control-dashboard/test-results",
         "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "firefox",
         "name": "firefox",
         "testDir": "/root/.openclaw/workspace/mission-control-dashboard/e2e",
@@ -44,8 +50,10 @@
       {
         "outputDir": "/root/.openclaw/workspace/mission-control-dashboard/test-results",
         "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "webkit",
         "name": "webkit",
         "testDir": "/root/.openclaw/workspace/mission-control-dashboard/e2e",
@@ -58,8 +66,10 @@
       {
         "outputDir": "/root/.openclaw/workspace/mission-control-dashboard/test-results",
         "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "mobile",
         "name": "mobile",
         "testDir": "/root/.openclaw/workspace/mission-control-dashboard/e2e",
@@ -72,8 +82,10 @@
       {
         "outputDir": "/root/.openclaw/workspace/mission-control-dashboard/test-results",
         "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "mobile-android",
         "name": "mobile-android",
         "testDir": "/root/.openclaw/workspace/mission-control-dashboard/e2e",
@@ -86,8 +98,10 @@
       {
         "outputDir": "/root/.openclaw/workspace/mission-control-dashboard/test-results",
         "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
+        "retries": 1,
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "dark-mode",
         "name": "dark-mode",
         "testDir": "/root/.openclaw/workspace/mission-control-dashboard/e2e",
@@ -132,24 +146,1094 @@
     "version": "1.58.2",
     "workers": 3,
     "webServer": {
-      "command": "npm run dev",
-      "url": "http://localhost:3000",
-      "reuseExistingServer": true
+      "command": "npx http-server out -p 3001",
+      "url": "http://localhost:3001",
+      "reuseExistingServer": true,
+      "timeout": 30000
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Timed out waiting 60000ms from config.webServer.",
-      "stack": "Error: Timed out waiting 60000ms from config.webServer."
+      "title": "tests/simple-check.spec.ts",
+      "file": "tests/simple-check.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Simple Page Check",
+          "file": "tests/simple-check.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "inspect page structure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1256,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-17T00:24:35.476Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1265,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-03-17T00:24:38.272Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eae7c97e0177d30e4fb-5001f1484e8c929007eb",
+              "file": "tests/simple-check.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect page structure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 2254,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-17T00:24:35.478Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 2299,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-03-17T00:24:39.898Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eae7c97e0177d30e4fb-ea95311905ad6d7302c0",
+              "file": "tests/simple-check.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect page structure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 2231,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-17T00:24:35.479Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 1848,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-03-17T00:24:39.562Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eae7c97e0177d30e4fb-b98540e73a30716db8eb",
+              "file": "tests/simple-check.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect page structure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2068,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-17T00:24:40.611Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1905,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-03-17T00:24:43.562Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eae7c97e0177d30e4fb-7020134cb27545f1e60c",
+              "file": "tests/simple-check.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect page structure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile-android",
+                  "projectName": "mobile-android",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 1405,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-17T00:24:42.694Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 1419,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-03-17T00:24:45.051Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eae7c97e0177d30e4fb-ead7805eaf2589102ec2",
+              "file": "tests/simple-check.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect page structure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "dark-mode",
+                  "projectName": "dark-mode",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 1219,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-17T00:24:43.869Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    },
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 1001,
+                      "error": {
+                        "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n",
+                        "stack": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56",
+                        "location": {
+                          "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                          "column": 56,
+                          "line": 36
+                        },
+                        "snippet": "  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                            "column": 56,
+                            "line": 36
+                          },
+                          "message": "Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:\n    1) <p class=\"text-xs font-semibold uppercase tracking-wider text-slate-500\">Error Rate</p> aka getByText('Error Rate', { exact: true })\n    2) <span class=\"min-w-0 text-sm text-slate-500\">Error rate</span> aka getByText('Error rate', { exact: true })\n\nCall log:\n\u001b[2m    - checking visibility of locator('text=Error')\u001b[22m\n\n\n  34 |     \n  35 |     // Check for any error states\n> 36 |     const errorText = await page.locator('text=Error').isVisible();\n     |                                                        ^\n  37 |     console.log(\"Error visible:\", errorText);\n  38 |     \n  39 |     expect(title).toContain('OpenClaw Mission Control');\n    at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Navigating to dashboard...\n"
+                        },
+                        {
+                          "text": "Waiting for load...\n"
+                        },
+                        {
+                          "text": "Taking screenshot...\n"
+                        },
+                        {
+                          "text": "Getting title...\n"
+                        },
+                        {
+                          "text": "Page title: OpenClaw Mission Control\n"
+                        },
+                        {
+                          "text": "Looking for loading state...\n"
+                        },
+                        {
+                          "text": "Loading visible: \u001b[33mfalse\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 1,
+                      "startTime": "2026-03-17T00:24:46.032Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/root/.openclaw/workspace/mission-control-dashboard/test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts",
+                        "column": 56,
+                        "line": 36
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1eae7c97e0177d30e4fb-36912e602ed586028ff5",
+              "file": "tests/simple-check.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2026-03-15T09:52:58.211Z",
-    "duration": 60050.594,
+    "startTime": "2026-03-17T00:24:34.745Z",
+    "duration": 12455.501999999999,
     "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 6,
     "flaky": 0
   }
 }

@@ -29,6 +29,9 @@ import {
 import Link from 'next/link'
 
 import { fetchDashboardData, type DashboardData } from './lib/api'
+import { RufloAgentGrid } from '@/components/RufloAgentGrid'
+import { SwarmCoordination } from '@/components/SwarmCoordination'
+import { PerformanceAnalytics } from '@/components/PerformanceAnalytics'
 
 const formatNumber = (num: number) => {
   if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
@@ -384,6 +387,15 @@ export default function EnhancedMissionControl() {
                 info="Based on 7-day performance metrics"
               />
             </div>
+
+            {/* Ruflo Performance Analytics */}
+            <PerformanceAnalytics />
+            
+            {/* Ruflo Agent Network */}
+            <RufloAgentGrid />
+            
+            {/* Swarm Coordination */}
+            <SwarmCoordination />
 
             {/* Command Blocks */}
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
