@@ -1,26 +1,31 @@
 'use client'
 
 import { useState } from 'react'
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { designTokens, componentTokens } from '@/lib/design-tokens'
 import { 
-  Bot, 
-  LayoutGrid, 
-  Activity, 
-  Menu,
-  Settings,
-  Users,
-  Zap,
-  Network,
   Crown,
   Briefcase,
-  UserCheck,
   Award,
+  UserCheck,
   Building,
   Target,
-  GitBranch,
-  ArrowDown,
-  ArrowDownRight
+  Users,
+  Activity,
+  Zap
 } from 'lucide-react'
-import Link from 'next/link'
+
+// Helper function for status colors
+const getStatusColorForChart = (status: string) => {
+  const colors = {
+    online: 'text-emerald-400 bg-emerald-400',
+    busy: 'text-yellow-400 bg-yellow-400',
+    offline: 'text-slate-500 bg-slate-500'
+  };
+  return colors[status as keyof typeof colors] || colors.offline;
+};
 
 // Organizational Chart Node Component
 interface ChartNodeProps {
@@ -36,36 +41,28 @@ interface ChartNodeProps {
 }
 
 const ChartNode = ({ agent, level, children }: ChartNodeProps) => {
-  const statusColors = {
-    online: 'bg-emerald-500',
-    busy: 'bg-amber-500', 
-    offline: 'bg-slate-400'
-  }
+  const statusColor = getStatusColorForChart(agent.status)
 
   const levelConfig = {
     ceo: {
-      bgColor: 'bg-gradient-to-r from-amber-100 to-yellow-100',
-      borderColor: 'border-amber-300',
-      textColor: 'text-amber-800',
-      icon: <Crown className="h-4 w-4 text-amber-600" />
+      bgColor: `${designTokens.colors.background.card} border-4 ${designTokens.colors.border.accent}`,
+      textColor: designTokens.colors.accent.primary.split(' ')[0],
+      icon: <Crown className={`h-4 w-4 ${designTokens.colors.accent.primary.split(' ')[0]}`} />
     },
     head: {
-      bgColor: 'bg-gradient-to-r from-blue-100 to-indigo-100', 
-      borderColor: 'border-blue-300',
-      textColor: 'text-blue-800',
-      icon: <Briefcase className="h-4 w-4 text-blue-600" />
+      bgColor: `${designTokens.colors.background.secondary} border-2 ${designTokens.colors.border.primary}`,
+      textColor: designTokens.colors.accent.secondary.split(' ')[0],
+      icon: <Briefcase className={`h-4 w-4 ${designTokens.colors.accent.secondary.split(' ')[0]}`} />
     },
     specialist: {
-      bgColor: 'bg-gradient-to-r from-violet-100 to-purple-100',
-      borderColor: 'border-violet-300',
-      textColor: 'text-violet-800',
-      icon: <Award className="h-4 w-4 text-violet-600" />
+      bgColor: `${designTokens.colors.background.tertiary} border-2 ${designTokens.colors.border.secondary}`,
+      textColor: designTokens.colors.text.secondary,
+      icon: <Award className={`h-4 w-4 ${designTokens.colors.text.secondary}`} />
     },
     team: {
-      bgColor: 'bg-gradient-to-r from-emerald-100 to-green-100',
-      borderColor: 'border-emerald-300',
-      textColor: 'text-emerald-800',
-      icon: <UserCheck className="h-4 w-4 text-emerald-600" />
+      bgColor: `${designTokens.colors.background.tertiary} border ${designTokens.colors.border.primary}`,
+      textColor: designTokens.colors.text.primary,
+      icon: <UserCheck className={`h-4 w-4 ${designTokens.colors.text.secondary}`} />
     }
   }
 
@@ -74,18 +71,18 @@ const ChartNode = ({ agent, level, children }: ChartNodeProps) => {
   return (
     <div className="flex flex-col items-center">
       {/* Agent Node */}
-      <div className={`relative rounded-xl border-2 ${config.borderColor} ${config.bgColor} p-4 shadow-lg transition hover:scale-105 hover:shadow-xl min-w-[220px]`}>
+      <div className={`relative ${designTokens.radius.lg} ${config.bgColor} ${designTokens.spacing.sm} ${designTokens.shadows.lg} transition hover:scale-105 hover:shadow-xl min-w-[220px] backdrop-blur-sm`}>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             {config.icon}
             <div>
               <div className="flex items-center gap-2">
-                <h3 className={`font-bold ${config.textColor}`}>{agent.name}</h3>
-                <span className={`inline-block h-2 w-2 rounded-full ${statusColors[agent.status]}`} />
+                <h3 className={`${designTokens.typography.weights.bold} ${config.textColor}`}>{agent.name}</h3>
+                <span className={`inline-block h-2 w-2 rounded-full ${statusColor.split(' ')[1]}`} />
               </div>
-              <p className="text-sm font-medium text-slate-700">{agent.role}</p>
+              <p className={`${designTokens.typography.sizes.sm} ${designTokens.typography.weights.medium} ${designTokens.colors.text.secondary}`}>{agent.role}</p>
               {agent.department && (
-                <p className="text-xs text-slate-600">{agent.department}</p>
+                <p className={`${designTokens.typography.sizes.xs} ${designTokens.colors.text.tertiary}`}>{agent.department}</p>
               )}
             </div>
           </div>
@@ -95,7 +92,7 @@ const ChartNode = ({ agent, level, children }: ChartNodeProps) => {
       {/* Connection Lines and Children */}
       {children && (
         <div className="mt-4 flex flex-col items-center">
-          <div className="h-8 w-0.5 bg-slate-300"></div>
+          <div className={`h-8 w-0.5 ${designTokens.colors.border.primary.replace('border-', 'bg-')}`}></div>
           <div className="flex items-start gap-8">
             {children}
           </div>
@@ -122,11 +119,11 @@ const DepartmentBranch = ({ head, members, title, color }: DepartmentBranchProps
       {/* Connection to team members */}
       {members.length > 0 && (
         <>
-          <div className="h-8 w-0.5 bg-slate-300 mt-4"></div>
+          <div className={`h-8 w-0.5 ${designTokens.colors.border.primary.replace('border-', 'bg-')} mt-4`}></div>
           <div className="relative">
             {/* Horizontal line for multiple members */}
             {members.length > 1 && (
-              <div className={`absolute top-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-slate-300`} 
+              <div className={`absolute top-0 left-1/2 transform -translate-x-1/2 h-0.5 ${designTokens.colors.border.primary.replace('border-', 'bg-')}`} 
                    style={{ width: `${(members.length - 1) * 240 + 220}px` }} />
             )}
             
@@ -135,7 +132,7 @@ const DepartmentBranch = ({ head, members, title, color }: DepartmentBranchProps
               {members.map((member, index) => (
                 <div key={member.id} className="flex flex-col items-center">
                   {members.length > 1 && (
-                    <div className="h-4 w-0.5 bg-slate-300"></div>
+                    <div className={`h-4 w-0.5 ${designTokens.colors.border.primary.replace('border-', 'bg-')}`}></div>
                   )}
                   <ChartNode agent={member} level="team" />
                 </div>
@@ -149,8 +146,6 @@ const DepartmentBranch = ({ head, members, title, color }: DepartmentBranchProps
 }
 
 export default function OrganizationalChart() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  
   // Organization Data
   const ceo = {
     id: 'main',
@@ -163,10 +158,17 @@ export default function OrganizationalChart() {
   const departmentHeads = [
     {
       id: 'bobo',
-      name: 'Bobo',
-      role: 'CTO',
+      name: 'Chief Architect Agent',
+      role: 'Enhanced CTO',
       status: 'online' as const,
       department: 'Software Department'
+    },
+    {
+      id: 'olamide', 
+      name: 'CFO Olamide',
+      role: 'Chief Financial Officer',
+      status: 'online' as const,
+      department: 'Finance Department'
     },
     {
       id: 'bimbo', 
@@ -186,11 +188,49 @@ export default function OrganizationalChart() {
 
   const softwareTeam = [
     {
+      id: 'master-coder',
+      name: 'Master Coder Agent',
+      role: 'Advanced Programming Specialist', 
+      status: 'busy' as const,
+      department: 'Software'
+    },
+    {
+      id: 'swarm-coordinator',
+      name: 'Swarm Coordinator Agent',
+      role: 'Multi-Agent Orchestration',
+      status: 'online' as const,
+      department: 'Software'
+    },
+    {
       id: 'rusty',
       name: 'Rusty',
       role: 'Technical Specialist', 
       status: 'busy' as const,
       department: 'Software'
+    }
+  ]
+
+  const financeTeam = [
+    {
+      id: 'tunde',
+      name: 'TradFi Scout Tunde',
+      role: 'LSE Specialist',
+      status: 'online' as const,
+      department: 'Finance'
+    },
+    {
+      id: 'kemi',
+      name: 'DeFAI Scout Kemi',
+      role: 'Solana/Sui Auditor',
+      status: 'busy' as const,
+      department: 'Finance'
+    },
+    {
+      id: 'adebayo',
+      name: 'Risk Manager Adebayo',
+      role: 'The Guardian',
+      status: 'online' as const,
+      department: 'Finance'
     }
   ]
 
@@ -207,283 +247,368 @@ export default function OrganizationalChart() {
   const mercorTeam = [
     {
       id: 'auditor',
-      name: 'Auditor',
-      role: 'Quality Auditor',
+      name: 'The Auditor',
+      role: 'Technical Validation',
       status: 'online' as const,
       department: 'Mercor'
     },
     {
       id: 'qc-judge',
       name: 'QC Judge', 
-      role: 'Quality Control Judge',
+      role: 'Executive Oversight',
       status: 'online' as const,
       department: 'Mercor'
     },
     {
       id: 'narrator',
-      name: 'Narrator',
-      role: 'Technical Narrator',
+      name: 'The Narrator',
+      role: 'Narrative Design',
       status: 'online' as const,
       department: 'Mercor'
     },
     {
       id: 'architect',
-      name: 'Architect',
-      role: 'Solution Architect',
+      name: 'The Architect',
+      role: 'System Architecture',
       status: 'busy' as const,
       department: 'Mercor'
     },
     {
       id: 'rubricist',
-      name: 'Rubricist',
-      role: 'Evaluation Specialist',
+      name: 'The Rubricist',
+      role: 'Scientific Evaluation',
       status: 'online' as const,
       department: 'Mercor'
     }
   ]
 
+  const totalAgents = 1 + departmentHeads.length + softwareTeam.length + financeTeam.length + contentTeam.length + mercorTeam.length
+  const onlineAgents = [ceo, ...departmentHeads, ...softwareTeam, ...financeTeam, ...contentTeam, ...mercorTeam].filter(a => a.status === 'online').length
+  const busyAgents = [ceo, ...departmentHeads, ...softwareTeam, ...financeTeam, ...contentTeam, ...mercorTeam].filter(a => a.status === 'busy').length
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="rounded-lg p-2 hover:bg-slate-100 lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 p-2">
-                <Zap className="h-6 w-6 text-white" />
+    <UnifiedLayout title="ORGANIZATIONAL CHART" subtitle="VISUAL HIERARCHY • LIVE STATUS • ENHANCED STRUCTURE">
+      <div className={`${designTokens.spacing.lg} space-y-8`}>
+        
+        {/* Organization Statistics */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <Card className={componentTokens.metricCard}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className={`${designTokens.typography.sizes['2xl']} ${designTokens.typography.weights.black} ${designTokens.colors.accent.primary.split(' ')[0]}`}>
+                    {totalAgents}
+                  </div>
+                  <div className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider} ${designTokens.typography.fonts.mono}`}>
+                    Total Agents
+                  </div>
+                </div>
+                <Users className={`h-8 w-8 ${designTokens.colors.accent.primary.split(' ')[0]}`} />
               </div>
-              <div>
-                <h1 className="text-xl font-bold text-slate-900">Organizational Chart</h1>
-                <p className="text-sm text-slate-500">Visual Hierarchy · Live Status</p>
+            </CardContent>
+          </Card>
+
+          <Card className={componentTokens.metricCard}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className={`${designTokens.typography.sizes['2xl']} ${designTokens.typography.weights.black} ${designTokens.colors.accent.success.split(' ')[0]}`}>
+                    {onlineAgents}
+                  </div>
+                  <div className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider} ${designTokens.typography.fonts.mono}`}>
+                    Online Now
+                  </div>
+                </div>
+                <Activity className={`h-8 w-8 ${designTokens.colors.accent.success.split(' ')[0]}`} />
               </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">
-              <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-              Live Structure
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+
+          <Card className={componentTokens.metricCard}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className={`${designTokens.typography.sizes['2xl']} ${designTokens.typography.weights.black} ${designTokens.colors.accent.warning.split(' ')[0]}`}>
+                    {busyAgents}
+                  </div>
+                  <div className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider} ${designTokens.typography.fonts.mono}`}>
+                    Active Tasks
+                  </div>
+                </div>
+                <Zap className={`h-8 w-8 ${designTokens.colors.accent.warning.split(' ')[0]}`} />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className={componentTokens.metricCard}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className={`${designTokens.typography.sizes['2xl']} ${designTokens.typography.weights.black} ${designTokens.colors.accent.secondary.split(' ')[0]}`}>
+                    {departmentHeads.length}
+                  </div>
+                  <div className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider} ${designTokens.typography.fonts.mono}`}>
+                    Departments
+                  </div>
+                </div>
+                <Building className={`h-8 w-8 ${designTokens.colors.accent.secondary.split(' ')[0]}`} />
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </header>
 
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 transform border-r border-slate-200 bg-white transition-transform lg:relative lg:translate-x-0`}>
-          <nav className="flex h-full flex-col">
-            <div className="p-4">
+        {/* Legend */}
+        <Card className={componentTokens.commandCard}>
+          <CardHeader>
+            <CardTitle className={`flex items-center gap-2 ${designTokens.typography.fonts.mono} uppercase ${designTokens.typography.tracking.wider}`}>
+              Legend
+              <Badge variant="outline" className={designTokens.typography.fonts.mono}>
+                Hierarchy Guide
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mb-6">
+              <div className="flex items-center gap-3">
+                <Crown className={`h-5 w-5 ${designTokens.colors.accent.primary.split(' ')[0]}`} />
+                <span className={`${designTokens.typography.sizes.sm} ${designTokens.typography.weights.medium} ${designTokens.colors.text.primary}`}>CEO Level</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Briefcase className={`h-5 w-5 ${designTokens.colors.accent.secondary.split(' ')[0]}`} />
+                <span className={`${designTokens.typography.sizes.sm} ${designTokens.typography.weights.medium} ${designTokens.colors.text.primary}`}>Department Head</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Award className={`h-5 w-5 ${designTokens.colors.text.secondary}`} />
+                <span className={`${designTokens.typography.sizes.sm} ${designTokens.typography.weights.medium} ${designTokens.colors.text.primary}`}>Specialist</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <UserCheck className={`h-5 w-5 ${designTokens.colors.text.secondary}`} />
+                <span className={`${designTokens.typography.sizes.sm} ${designTokens.typography.weights.medium} ${designTokens.colors.text.primary}`}>Team Member</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <span className={`inline-block h-2 w-2 rounded-full ${designTokens.colors.accent.success.split(' ')[1]}`}></span>
+                <span className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>Online</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`inline-block h-2 w-2 rounded-full ${designTokens.colors.accent.warning.split(' ')[1]}`}></span>
+                <span className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>Busy</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`inline-block h-2 w-2 rounded-full bg-slate-500`}></span>
+                <span className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>Offline</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Organizational Chart */}
+        <Card className={componentTokens.commandCard}>
+          <CardHeader>
+            <CardTitle className={`flex items-center gap-2 ${designTokens.typography.fonts.mono} uppercase ${designTokens.typography.tracking.wider}`}>
+              <Target className="h-5 w-5" />
+              Organizational Structure
+              <Badge variant="outline" className={designTokens.typography.fonts.mono}>
+                Live Status
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="overflow-x-auto">
+            <div className="flex flex-col items-center min-w-[1200px] py-8">
+              {/* CEO Level */}
+              <ChartNode agent={ceo} level="ceo">
+                {/* Department Heads Level */}
+                <div className="flex items-start gap-12">
+                  {/* Software Department */}
+                  <DepartmentBranch
+                    head={departmentHeads[0]}
+                    members={softwareTeam}
+                    title="Enhanced Software Department"
+                    color="blue"
+                  />
+
+                  {/* Finance Department */}
+                  <DepartmentBranch
+                    head={departmentHeads[1]}
+                    members={financeTeam}
+                    title="Finance Department"
+                    color="amber"
+                  />
+
+                  {/* Content Department */}
+                  <DepartmentBranch
+                    head={departmentHeads[2]}
+                    members={contentTeam}
+                    title="Content & Presentations"
+                    color="purple"
+                  />
+
+                  {/* Mercor Division */}
+                  <DepartmentBranch
+                    head={departmentHeads[3]}
+                    members={mercorTeam}
+                    title="Mercor Project Division"
+                    color="emerald"
+                  />
+                </div>
+              </ChartNode>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Department Summary */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Enhanced Software Department */}
+          <Card className={componentTokens.metricCard}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${designTokens.colors.accent.secondary.split(' ')[0]}`}>
+                <Briefcase className="h-5 w-5" />
+                Enhanced Software Department
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 mb-4">
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Head:</strong> Chief Architect Agent (Ruflo Enhanced)
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Members:</strong> {1 + softwareTeam.length} Active Agents
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Focus:</strong> AI Orchestration & Advanced Development
+                </p>
+              </div>
               <div className="space-y-1">
-                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
-                  <LayoutGrid className="h-4 w-4" />
-                  Dashboard
-                </Link>
-                <Link href="/agents" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
-                  <Bot className="h-4 w-4" />
-                  Agents
-                </Link>
-                <a href="#" className="flex items-center gap-3 rounded-lg bg-blue-50 px-3 py-2 text-blue-700">
-                  <GitBranch className="h-4 w-4" />
-                  Org Chart
-                </a>
-                <button 
-                  onClick={() => {
-                    const element = document.querySelector('[data-legend]') as HTMLElement;
-                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
-                  }}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Users className="h-4 w-4" />
-                  View Legend
-                </button>
-                <button 
-                  onClick={() => {
-                    const element = document.querySelector('[data-departments]') as HTMLElement;
-                    if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
-                  }}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Activity className="h-4 w-4" />
-                  Dept Summary
-                </button>
-                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
-                  <Network className="h-4 w-4" />
-                  Dashboard
-                </Link>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Settings className="h-4 w-4" />
-                  Refresh Chart
-                </button>
-              </div>
-            </div>
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="p-8">
-            {/* Legend */}
-            <div data-legend className="mb-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Legend</h3>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                <div className="flex items-center gap-3">
-                  <Crown className="h-5 w-5 text-amber-600" />
-                  <span className="text-sm font-medium text-slate-700">CEO Level</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Briefcase className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm font-medium text-slate-700">Department Head</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Award className="h-5 w-5 text-violet-600" />
-                  <span className="text-sm font-medium text-slate-700">Specialist</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <UserCheck className="h-5 w-5 text-emerald-600" />
-                  <span className="text-sm font-medium text-slate-700">Team Member</span>
+                <p className={`${designTokens.typography.sizes.xs} ${designTokens.typography.weights.medium} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider}`}>
+                  Team Members:
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {softwareTeam.map(member => (
+                    <Badge key={member.id} variant="outline" className={`${designTokens.typography.sizes.xs}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${getStatusColorForChart(member.status).split(' ')[1]} mr-1`}></span>
+                      {member.name}
+                    </Badge>
+                  ))}
                 </div>
               </div>
-              <div className="mt-4 flex items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
-                  <span className="text-sm text-slate-600">Online</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-2 w-2 rounded-full bg-amber-500"></span>
-                  <span className="text-sm text-slate-600">Busy</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-2 w-2 rounded-full bg-slate-400"></span>
-                  <span className="text-sm text-slate-600">Offline</span>
+            </CardContent>
+          </Card>
+
+          {/* Finance Department */}
+          <Card className={componentTokens.metricCard}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${designTokens.colors.accent.primary.split(' ')[0]}`}>
+                <Crown className="h-5 w-5" />
+                Finance Department
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 mb-4">
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Head:</strong> CFO Olamide
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Members:</strong> {1 + financeTeam.length} Trading Specialists
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Focus:</strong> Trading Operations & Risk Management
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className={`${designTokens.typography.sizes.xs} ${designTokens.typography.weights.medium} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider}`}>
+                  Team Members:
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {financeTeam.map(member => (
+                    <Badge key={member.id} variant="outline" className={`${designTokens.typography.sizes.xs}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${getStatusColorForChart(member.status).split(' ')[1]} mr-1`}></span>
+                      {member.name}
+                    </Badge>
+                  ))}
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Organizational Chart */}
-            <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
-              <div className="flex flex-col items-center overflow-x-auto">
-                {/* CEO Level */}
-                <ChartNode agent={ceo} level="ceo">
-                  {/* Department Heads Level */}
-                  <div className="flex items-start gap-12">
-                    {/* Software Department */}
-                    <DepartmentBranch
-                      head={departmentHeads[0]}
-                      members={softwareTeam}
-                      title="Software Department"
-                      color="blue"
-                    />
-
-                    {/* Content Department */}
-                    <DepartmentBranch
-                      head={departmentHeads[1]}
-                      members={contentTeam}
-                      title="Content & Presentations"
-                      color="purple"
-                    />
-
-                    {/* Mercor Division */}
-                    <DepartmentBranch
-                      head={departmentHeads[2]}
-                      members={mercorTeam}
-                      title="Mercor Project Division"
-                      color="emerald"
-                    />
-                  </div>
-                </ChartNode>
+          {/* Content Department */}
+          <Card className={componentTokens.metricCard}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${designTokens.colors.text.secondary}`}>
+                <Building className="h-5 w-5" />
+                Content & Presentations
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 mb-4">
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Head:</strong> Bimbo (PM-Content)
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Members:</strong> {1 + contentTeam.length} Content Specialists
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Focus:</strong> Presentation Excellence & Content Standards
+                </p>
               </div>
-            </div>
-
-            {/* Department Summary */}
-            <div data-departments className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-              {/* Software Department */}
-              <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-4">
-                  <Briefcase className="h-6 w-6 text-blue-600" />
-                  <h3 className="text-lg font-bold text-blue-800">Software Department</h3>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-blue-700"><strong>Head:</strong> Bobo (CTO)</p>
-                  <p className="text-sm text-blue-700"><strong>Members:</strong> {1 + softwareTeam.length}</p>
-                  <p className="text-sm text-blue-700"><strong>Focus:</strong> Technical development & architecture</p>
-                  <div className="mt-3">
-                    <p className="text-xs font-medium text-blue-600 mb-1">Team Members:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {softwareTeam.map(member => (
-                        <span key={member.id} className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-700">
-                          <span className={`h-1.5 w-1.5 rounded-full ${(member as any).status === 'online' ? 'bg-emerald-500' : (member as any).status === 'busy' ? 'bg-amber-500' : 'bg-slate-400'}`}></span>
-                          {member.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+              <div className="space-y-1">
+                <p className={`${designTokens.typography.sizes.xs} ${designTokens.typography.weights.medium} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider}`}>
+                  Team Members:
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {contentTeam.map(member => (
+                    <Badge key={member.id} variant="outline" className={`${designTokens.typography.sizes.xs}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${getStatusColorForChart(member.status).split(' ')[1]} mr-1`}></span>
+                      {member.name}
+                    </Badge>
+                  ))}
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Content Department */}
-              <div className="rounded-xl border border-purple-200 bg-gradient-to-r from-purple-50 to-violet-50 p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-4">
-                  <Building className="h-6 w-6 text-purple-600" />
-                  <h3 className="text-lg font-bold text-purple-800">Content & Presentations</h3>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-purple-700"><strong>Head:</strong> Bimbo (PM-Content)</p>
-                  <p className="text-sm text-purple-700"><strong>Members:</strong> {1 + contentTeam.length}</p>
-                  <p className="text-sm text-purple-700"><strong>Focus:</strong> Content creation & presentation standards</p>
-                  <div className="mt-3">
-                    <p className="text-xs font-medium text-purple-600 mb-1">Team Members:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {contentTeam.map(member => (
-                        <span key={member.id} className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-1 text-xs text-purple-700">
-                          <span className={`h-1.5 w-1.5 rounded-full ${(member as any).status === 'online' ? 'bg-emerald-500' : (member as any).status === 'busy' ? 'bg-amber-500' : 'bg-slate-400'}`}></span>
-                          {member.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+          {/* Mercor Division */}
+          <Card className={componentTokens.metricCard}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${designTokens.colors.accent.success.split(' ')[0]}`}>
+                <Target className="h-5 w-5" />
+                Mercor Project Division
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 mb-4">
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Head:</strong> Pajimo (PM-Mercor)
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Members:</strong> {1 + mercorTeam.length} Quality Specialists
+                </p>
+                <p className={`${designTokens.typography.sizes.sm} ${designTokens.colors.text.secondary}`}>
+                  <strong>Focus:</strong> Project Quality & Technical Evaluation
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className={`${designTokens.typography.sizes.xs} ${designTokens.typography.weights.medium} ${designTokens.colors.text.tertiary} uppercase ${designTokens.typography.tracking.wider}`}>
+                  Team Members:
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {mercorTeam.slice(0, 3).map(member => (
+                    <Badge key={member.id} variant="outline" className={`${designTokens.typography.sizes.xs}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${getStatusColorForChart(member.status).split(' ')[1]} mr-1`}></span>
+                      {member.name}
+                    </Badge>
+                  ))}
+                  {mercorTeam.length > 3 && (
+                    <Badge variant="outline" className={`${designTokens.typography.sizes.xs}`}>
+                      +{mercorTeam.length - 3} more
+                    </Badge>
+                  )}
                 </div>
               </div>
-
-              {/* Mercor Division */}
-              <div className="rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-50 p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-4">
-                  <Target className="h-6 w-6 text-emerald-600" />
-                  <h3 className="text-lg font-bold text-emerald-800">Mercor Project Division</h3>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-emerald-700"><strong>Head:</strong> Pajimo (PM-Mercor)</p>
-                  <p className="text-sm text-emerald-700"><strong>Members:</strong> {1 + mercorTeam.length}</p>
-                  <p className="text-sm text-emerald-700"><strong>Focus:</strong> Project quality & evaluation</p>
-                  <div className="mt-3">
-                    <p className="text-xs font-medium text-emerald-600 mb-1">Team Members:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {mercorTeam.slice(0, 3).map(member => (
-                        <span key={member.id} className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-1 text-xs text-emerald-700">
-                          <span className={`h-1.5 w-1.5 rounded-full ${(member as any).status === 'online' ? 'bg-emerald-500' : (member as any).status === 'busy' ? 'bg-amber-500' : 'bg-slate-400'}`}></span>
-                          {member.name}
-                        </span>
-                      ))}
-                      {mercorTeam.length > 3 && (
-                        <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-1 text-xs text-emerald-700">
-                          +{mercorTeam.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+    </UnifiedLayout>
   )
 }
