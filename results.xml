@@ -1,2 +1,620 @@
-<testsuites id="" name="" tests="0" failures="0" skipped="0" errors="0" time="60.050594">
+<testsuites id="" name="" tests="6" failures="6" skipped="0" errors="0" time="12.455502">
+<testsuite name="tests/simple-check.spec.ts" timestamp="2026-03-17T00:24:34.792Z" hostname="chromium" tests="1" failures="1" skipped="0" time="2.521" errors="0">
+<testcase name="Simple Page Check › inspect page structure" classname="tests/simple-check.spec.ts" time="2.521">
+<failure message="simple-check.spec.ts:4:7 inspect page structure" type="FAILURE">
+<![CDATA[  [chromium] › tests/simple-check.spec.ts:4:7 › Simple Page Check › inspect page structure ─────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium/error-context.md]]
+Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="tests/simple-check.spec.ts" timestamp="2026-03-17T00:24:34.792Z" hostname="firefox" tests="1" failures="1" skipped="0" time="4.553" errors="0">
+<testcase name="Simple Page Check › inspect page structure" classname="tests/simple-check.spec.ts" time="4.553">
+<failure message="simple-check.spec.ts:4:7 inspect page structure" type="FAILURE">
+<![CDATA[  [firefox] › tests/simple-check.spec.ts:4:7 › Simple Page Check › inspect page structure ──────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox/error-context.md]]
+Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/error-context.md]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-firefox-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="tests/simple-check.spec.ts" timestamp="2026-03-17T00:24:34.792Z" hostname="webkit" tests="1" failures="1" skipped="0" time="4.079" errors="0">
+<testcase name="Simple Page Check › inspect page structure" classname="tests/simple-check.spec.ts" time="4.079">
+<failure message="simple-check.spec.ts:4:7 inspect page structure" type="FAILURE">
+<![CDATA[  [webkit] › tests/simple-check.spec.ts:4:7 › Simple Page Check › inspect page structure ───────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit/error-context.md]]
+Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/error-context.md]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-webkit-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="tests/simple-check.spec.ts" timestamp="2026-03-17T00:24:34.792Z" hostname="mobile" tests="1" failures="1" skipped="0" time="3.973" errors="0">
+<testcase name="Simple Page Check › inspect page structure" classname="tests/simple-check.spec.ts" time="3.973">
+<failure message="simple-check.spec.ts:4:7 inspect page structure" type="FAILURE">
+<![CDATA[  [mobile] › tests/simple-check.spec.ts:4:7 › Simple Page Check › inspect page structure ───────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile/error-context.md]]
+Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/error-context.md]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="tests/simple-check.spec.ts" timestamp="2026-03-17T00:24:34.792Z" hostname="mobile-android" tests="1" failures="1" skipped="0" time="2.824" errors="0">
+<testcase name="Simple Page Check › inspect page structure" classname="tests/simple-check.spec.ts" time="2.824">
+<failure message="simple-check.spec.ts:4:7 inspect page structure" type="FAILURE">
+<![CDATA[  [mobile-android] › tests/simple-check.spec.ts:4:7 › Simple Page Check › inspect page structure ───
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android/error-context.md]]
+Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/error-context.md]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-mobile-android-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="tests/simple-check.spec.ts" timestamp="2026-03-17T00:24:34.792Z" hostname="dark-mode" tests="1" failures="1" skipped="0" time="2.22" errors="0">
+<testcase name="Simple Page Check › inspect page structure" classname="tests/simple-check.spec.ts" time="2.22">
+<failure message="simple-check.spec.ts:4:7 inspect page structure" type="FAILURE">
+<![CDATA[  [dark-mode] › tests/simple-check.spec.ts:4:7 › Simple Page Check › inspect page structure ────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: locator.isVisible: Error: strict mode violation: locator('text=Error') resolved to 2 elements:
+        1) <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Rate</p> aka getByText('Error Rate', { exact: true })
+        2) <span class="min-w-0 text-sm text-slate-500">Error rate</span> aka getByText('Error rate', { exact: true })
+
+    Call log:
+        - checking visibility of locator('text=Error')
+
+
+      34 |     
+      35 |     // Check for any error states
+    > 36 |     const errorText = await page.locator('text=Error').isVisible();
+         |                                                        ^
+      37 |     console.log("Error visible:", errorText);
+      38 |     
+      39 |     expect(title).toContain('OpenClaw Mission Control');
+        at /root/.openclaw/workspace/mission-control-dashboard/e2e/tests/simple-check.spec.ts:36:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode/error-context.md]]
+Navigating to dashboard...
+Waiting for load...
+Taking screenshot...
+Getting title...
+Page title: OpenClaw Mission Control
+Looking for loading state...
+Loading visible: [33mfalse[39m
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/video.webm]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/error-context.md]]
+
+[[ATTACHMENT|test-results/tests-simple-check-Simple-Page-Check-inspect-page-structure-dark-mode-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
 </testsuites>

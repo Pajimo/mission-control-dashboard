@@ -5,9 +5,11 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  // Netlify deployment configuration (no basePath needed)
-  // basePath: '/mission-control-dashboard', // Removed for Netlify
-  // assetPrefix: '/mission-control-dashboard/', // Removed for Netlify
+  experimental: {
+    // Enable runtime for static export with dynamic data simulation
+    typedRoutes: false
+  }
+  // Note: API routes disabled for static export - using client-side simulation
 }
 
 module.exports = nextConfig
