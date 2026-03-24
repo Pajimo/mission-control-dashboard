@@ -1,575 +1,626 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { 
-  Bot, 
-  LayoutGrid, 
-  Activity, 
-  Timer, 
-  Info, 
-  ArrowUpRight, 
-  Shield,
-  Menu,
-  Settings,
-  Users,
-  Zap,
-  CheckCircle,
-  AlertTriangle,
-  Clock,
-  Database,
-  Network,
-  Cpu,
-  RefreshCw,
-  Crown,
-  Briefcase,
-  UserCheck,
-  GitBranch,
-  Award,
-  ChevronRight,
-  Building,
-  Target
-} from 'lucide-react'
+import { useState } from 'react'
 import Link from 'next/link'
+import { 
+  googleStitchColors, 
+  googleStitchTypography,
+  materialIcons 
+} from '@/lib/google-stitch-tokens'
 
-// Agent Structure Data
-const organizationalData = {
-  ceo: {
-    id: 'main',
-    name: 'MideSquare', 
-    role: 'CEO',
-    status: 'online',
-    model: 'Claude Sonnet 4',
-    description: 'Strategic oversight, final approval, delegation',
-    lastActive: new Date(Date.now() - 1000 * 60 * 2),
-    tokensUsed: 45230,
-    tokensMax: 200000,
-    authority: 'Full organizational authority',
-    department: 'Executive'
-  },
-  departmentHeads: [
-    {
-      id: 'bobo',
-      name: 'Bobo',
-      role: 'CTO',
-      status: 'online',
-      model: 'Claude Sonnet 4',
-      description: 'Chief Technology Officer - Software Department',
-      authority: 'Technical decisions, development oversight',
-      department: 'Software Department',
-      lastActive: new Date(Date.now() - 1000 * 60 * 5),
-      tokensUsed: 28150,
-      tokensMax: 200000,
-      subordinates: ['rusty', 'dolly']
-    },
-    {
-      id: 'bimbo',
-      name: 'Bimbo',
-      role: 'PM-Content',
-      status: 'online',
-      model: 'Claude Sonnet 4',
-      description: 'Presentation & Content Creation Manager',
-      authority: 'Content strategy, presentation standards',
-      department: 'Content & Presentations',
-      lastActive: new Date(Date.now() - 1000 * 60 * 8),
-      tokensUsed: 19420,
-      tokensMax: 200000,
-      subordinates: ['deckbuilder']
-    },
-    {
-      id: 'pajimo',
-      name: 'Pajimo',
-      role: 'PM-Mercor', 
-      status: 'online',
-      model: 'Claude Sonnet 4',
-      description: 'Project Manager & Head of Mercor Project Division',
-      authority: 'Full departmental authority, direct CEO reporting',
-      department: 'Mercor Project Division',
-      lastActive: new Date(Date.now() - 1000 * 60 * 3),
-      tokensUsed: 32180,
-      tokensMax: 200000,
-      subordinates: ['auditor', 'qc-judge', 'narrator', 'architect', 'rubricist']
-    }
-  ],
-  specialists: [
-    {
-      id: 'rusty',
-      name: 'Rusty',
-      role: 'Technical Specialist',
-      status: 'busy',
-      model: 'Claude Sonnet 4',
-      description: 'Senior Developer, multi-department technical support',
-      department: 'Software Department',
-      manager: 'Bobo (CTO)',
-      lastActive: new Date(Date.now() - 1000 * 60 * 1),
-      tokensUsed: 15680,
-      tokensMax: 200000
-    }
-  ],
-  mercorTeam: [
-    {
-      id: 'auditor',
-      name: 'Auditor',
-      role: 'Quality Auditor',
-      status: 'online',
-      model: 'Claude Sonnet 4',
-      description: 'Quality assessment and compliance auditing',
-      department: 'Mercor Project Division',
-      manager: 'Pajimo',
-      lastActive: new Date(Date.now() - 1000 * 60 * 12),
-      tokensUsed: 8940,
-      tokensMax: 200000
-    },
-    {
-      id: 'qc-judge',
-      name: 'QC Judge',
-      role: 'Quality Control Judge',
-      status: 'online', 
-      model: 'Claude Sonnet 4',
-      description: 'Final quality control assessment',
-      department: 'Mercor Project Division',
-      manager: 'Pajimo',
-      lastActive: new Date(Date.now() - 1000 * 60 * 7),
-      tokensUsed: 11230,
-      tokensMax: 200000
-    },
-    {
-      id: 'narrator',
-      name: 'Narrator',
-      role: 'Technical Narrator',
-      status: 'online',
-      model: 'Claude Sonnet 4',
-      description: 'Technical documentation and narrative creation',
-      department: 'Mercor Project Division',
-      manager: 'Pajimo', 
-      lastActive: new Date(Date.now() - 1000 * 60 * 15),
-      tokensUsed: 7850,
-      tokensMax: 200000
-    },
-    {
-      id: 'architect',
-      name: 'Architect',
-      role: 'Solution Architect',
-      status: 'busy',
-      model: 'Claude Sonnet 4',
-      description: 'Technical architecture and system design',
-      department: 'Mercor Project Division',
-      manager: 'Pajimo',
-      lastActive: new Date(Date.now() - 1000 * 60 * 4),
-      tokensUsed: 18920,
-      tokensMax: 200000
-    },
-    {
-      id: 'rubricist',
-      name: 'Rubricist',
-      role: 'Evaluation Specialist',
-      status: 'online',
-      model: 'Claude Sonnet 4',
-      description: 'Assessment criteria and evaluation frameworks',
-      department: 'Mercor Project Division',
-      manager: 'Pajimo',
-      lastActive: new Date(Date.now() - 1000 * 60 * 9),
-      tokensUsed: 9750,
-      tokensMax: 200000
-    }
-  ]
+// Material Design Icons Component
+const MaterialIcon = ({ name, className = '', style }: { name: string; className?: string; style?: React.CSSProperties }) => (
+  <span className={`material-icons ${className}`} style={{ fontFamily: 'Material Icons', ...style }}>
+    {name}
+  </span>
+)
+
+// Google Stitch Button Component
+interface StitchButtonProps {
+  variant: 'primary' | 'secondary' | 'inverted' | 'outlined'
+  children: React.ReactNode
+  onClick?: () => void
+  className?: string
+  size?: 'small' | 'medium' | 'large'
 }
 
-const formatRelativeTime = (date: Date) => {
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  
-  if (hours > 0) return `${hours}h ago`
-  if (minutes > 0) return `${minutes}m ago`
-  return 'just now'
+const StitchButton = ({ variant, children, onClick, className = '', size = 'medium' }: StitchButtonProps) => {
+  const baseStyles = {
+    primary: {
+      backgroundColor: googleStitchColors.primary,
+      color: '#FFFFFF',
+      border: 'none',
+    },
+    secondary: {
+      backgroundColor: 'transparent',
+      color: googleStitchColors.primary,
+      border: `1px solid ${googleStitchColors.primary}`,
+    },
+    inverted: {
+      backgroundColor: '#FFFFFF',
+      color: googleStitchColors.neutral,
+      border: 'none',
+    },
+    outlined: {
+      backgroundColor: 'transparent',
+      color: googleStitchColors.text.primary,
+      border: `1px solid ${googleStitchColors.border.primary}`,
+    }
+  }
+
+  const sizeStyles = {
+    small: { padding: '8px 16px', fontSize: '12px' },
+    medium: { padding: '12px 24px', fontSize: '14px' },
+    large: { padding: '16px 32px', fontSize: '16px' }
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center justify-center gap-2 rounded-lg font-medium hover:opacity-90 transition-opacity ${className}`}
+      style={{
+        ...baseStyles[variant],
+        ...sizeStyles[size],
+        fontFamily: googleStitchTypography.fontFamily.primary,
+        fontWeight: '500'
+      }}
+    >
+      {children}
+    </button>
+  )
 }
 
-const formatNumber = (num: number) => {
-  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}m`
-  if (num >= 1000) return `${(num / 1000).toFixed(1)}k`
-  return num.toString()
+// Agent Card Component
+interface Agent {
+  id: string
+  name: string
+  status: 'active' | 'idle' | 'error'
+  department: string
+  currentTask: string
+  performance: number
+  uptime: string
+  lastUpdate: string
+  tasksCompleted?: number
+  errorRate?: number
 }
 
 interface AgentCardProps {
-  agent: any
-  level: 'ceo' | 'head' | 'specialist' | 'team'
-  showReportingLine?: boolean
+  agent: Agent
+  isSelected: boolean
+  onSelect: (id: string) => void
 }
 
-const AgentCard = ({ agent, level, showReportingLine = false }: AgentCardProps) => {
+const AgentCard = ({ agent, isSelected, onSelect }: AgentCardProps) => {
   const statusColors = {
-    online: 'bg-emerald-500',
-    busy: 'bg-amber-500',
-    offline: 'bg-slate-400'
+    active: googleStitchColors.tertiary,
+    idle: googleStitchColors.secondary,
+    error: googleStitchColors.error
   }
 
-  const levelConfig = {
-    ceo: {
-      borderColor: 'border-amber-300',
-      bgColor: 'bg-gradient-to-r from-amber-50 to-yellow-50',
-      icon: <Crown className="h-5 w-5 text-amber-600" />,
-      iconBg: 'bg-amber-100'
-    },
-    head: {
-      borderColor: 'border-blue-300',
-      bgColor: 'bg-gradient-to-r from-blue-50 to-indigo-50',
-      icon: <Briefcase className="h-5 w-5 text-blue-600" />,
-      iconBg: 'bg-blue-100'
-    },
-    specialist: {
-      borderColor: 'border-violet-300',
-      bgColor: 'bg-gradient-to-r from-violet-50 to-purple-50',
-      icon: <Award className="h-5 w-5 text-violet-600" />,
-      iconBg: 'bg-violet-100'
-    },
-    team: {
-      borderColor: 'border-emerald-300',
-      bgColor: 'bg-gradient-to-r from-emerald-50 to-green-50',
-      icon: <UserCheck className="h-5 w-5 text-emerald-600" />,
-      iconBg: 'bg-emerald-100'
-    }
+  const statusIcons = {
+    active: 'play_circle_filled',
+    idle: 'pause_circle_filled',
+    error: 'error'
   }
-
-  const config = levelConfig[level]
 
   return (
-    <div className={`rounded-xl border-2 ${config.borderColor} ${config.bgColor} p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg`}>
-      {showReportingLine && agent.manager && (
-        <div className="mb-4 flex items-center gap-2 text-sm text-slate-600">
-          <ChevronRight className="h-4 w-4" />
-          <span>Reports to: <strong>{agent.manager}</strong></span>
-        </div>
-      )}
-      
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <div className={`${config.iconBg} rounded-lg p-3`}>
-            {config.icon}
+    <div
+      className={`p-6 rounded-xl cursor-pointer transition-all hover:opacity-80 ${isSelected ? 'ring-2' : ''}`}
+      style={{
+        backgroundColor: googleStitchColors.surface.secondary,
+        border: `1px solid ${isSelected ? googleStitchColors.primary : googleStitchColors.border.secondary}`,
+        ...(isSelected && {
+          '--tw-ring-color': `${googleStitchColors.primary}40`
+        })
+      }}
+      onClick={() => onSelect(agent.id)}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <div 
+            className="w-12 h-12 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: `${googleStitchColors.primary}20`, color: googleStitchColors.primary }}
+          >
+            <MaterialIcon name="smart_toy" className="text-xl" />
           </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-1">
-              <h3 className="text-lg font-bold text-slate-900">{agent.name}</h3>
-              <span className={`inline-block h-2.5 w-2.5 rounded-full ${statusColors[agent.status as keyof typeof statusColors] || 'bg-slate-400'}`} />
-            </div>
-            <p className="text-sm font-medium text-slate-700 mb-1">{agent.role}</p>
-            <p className="text-sm text-slate-600 mb-3">{agent.description}</p>
-            
-            {agent.department && (
-              <div className="flex items-center gap-1 mb-3">
-                <Building className="h-4 w-4 text-slate-500" />
-                <span className="text-sm text-slate-600">{agent.department}</span>
-              </div>
-            )}
-            
-            {agent.authority && (
-              <div className="rounded-lg bg-white/50 border border-white/20 p-3 mb-3">
-                <p className="text-xs font-medium text-slate-700 mb-1">AUTHORITY:</p>
-                <p className="text-xs text-slate-600">{agent.authority}</p>
-              </div>
-            )}
-            
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-slate-500">Model:</p>
-                <p className="font-medium text-slate-700">{agent.model}</p>
-              </div>
-              <div>
-                <p className="text-slate-500">Last Active:</p>
-                <p className="font-medium text-slate-700">{formatRelativeTime(agent.lastActive)}</p>
-              </div>
-              <div>
-                <p className="text-slate-500">Token Usage:</p>
-                <p className="font-medium text-slate-700">
-                  {formatNumber(agent.tokensUsed)}/{formatNumber(agent.tokensMax)} 
-                  <span className="text-slate-500 ml-1">
-                    ({Math.round((agent.tokensUsed / agent.tokensMax) * 100)}%)
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p className="text-slate-500">Status:</p>
-                <p className={`font-medium capitalize ${
-                  agent.status === 'online' ? 'text-emerald-600' :
-                  agent.status === 'busy' ? 'text-amber-600' : 'text-slate-600'
-                }`}>
-                  {agent.status}
-                </p>
-              </div>
-            </div>
-            
-            {agent.subordinates && agent.subordinates.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-white/30">
-                <p className="text-xs font-medium text-slate-700 mb-2">MANAGES:</p>
-                <div className="flex flex-wrap gap-2">
-                  {agent.subordinates.map((sub: string) => (
-                    <span key={sub} className="inline-flex items-center gap-1 rounded-full bg-white/60 px-2 py-1 text-xs font-medium text-slate-700">
-                      <Users className="h-3 w-3" />
-                      {sub}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div>
+            <h3 
+              className="font-semibold mb-1"
+              style={{ 
+                ...googleStitchTypography.body.large,
+                color: googleStitchColors.text.primary,
+                fontWeight: '600'
+              }}
+            >
+              {agent.name}
+            </h3>
+            <p 
+              className="uppercase tracking-wider"
+              style={{ 
+                ...googleStitchTypography.label.small,
+                color: googleStitchColors.text.secondary
+              }}
+            >
+              {agent.department}
+            </p>
           </div>
         </div>
+        
+        <div className="flex items-center gap-2">
+          <MaterialIcon 
+            name={statusIcons[agent.status]}
+            style={{ color: statusColors[agent.status], fontSize: '20px' }}
+          />
+        </div>
+      </div>
+
+      {/* Current Task */}
+      <div className="mb-6">
+        <p 
+          className="uppercase tracking-wider mb-2"
+          style={{ 
+            ...googleStitchTypography.label.small,
+            color: googleStitchColors.text.tertiary
+          }}
+        >
+          Current Status
+        </p>
+        <p 
+          style={{ 
+            ...googleStitchTypography.body.medium,
+            color: googleStitchColors.text.primary
+          }}
+        >
+          {agent.currentTask}
+        </p>
+      </div>
+
+      {/* Metrics */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div>
+          <p 
+            className="mb-1"
+            style={{ 
+              ...googleStitchTypography.label.small,
+              color: googleStitchColors.text.tertiary
+            }}
+          >
+            Performance
+          </p>
+          <div className="flex items-center gap-2">
+            <p 
+              className="font-bold"
+              style={{ 
+                ...googleStitchTypography.body.medium,
+                color: googleStitchColors.text.primary,
+                fontWeight: '600'
+              }}
+            >
+              {agent.performance}%
+            </p>
+            <div 
+              className="flex-1 h-2 rounded-full"
+              style={{ backgroundColor: `${googleStitchColors.border.primary}` }}
+            >
+              <div 
+                className="h-full rounded-full"
+                style={{ 
+                  backgroundColor: agent.performance > 90 ? googleStitchColors.tertiary : 
+                                  agent.performance > 70 ? googleStitchColors.secondary : 
+                                  googleStitchColors.error,
+                  width: `${agent.performance}%`
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <p 
+            className="mb-1"
+            style={{ 
+              ...googleStitchTypography.label.small,
+              color: googleStitchColors.text.tertiary
+            }}
+          >
+            Uptime
+          </p>
+          <p 
+            className="font-bold"
+            style={{ 
+              ...googleStitchTypography.body.medium,
+              color: googleStitchColors.text.primary,
+              fontWeight: '600'
+            }}
+          >
+            {agent.uptime}
+          </p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div 
+        className="pt-4 border-t flex items-center justify-between"
+        style={{ borderColor: googleStitchColors.border.primary }}
+      >
+        <span 
+          style={{ 
+            ...googleStitchTypography.label.small,
+            color: googleStitchColors.text.tertiary
+          }}
+        >
+          Updated {agent.lastUpdate}
+        </span>
+        
+        <div 
+          className="w-3 h-3 rounded-full"
+          style={{ backgroundColor: statusColors[agent.status] }}
+        />
       </div>
     </div>
   )
 }
 
-export default function AgentsPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [viewMode, setViewMode] = useState<'hierarchy' | 'list'>('hierarchy')
+export default function GoogleStitchAgentsPage() {
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
 
-  const allAgents = [
-    organizationalData.ceo,
-    ...organizationalData.departmentHeads,
-    ...organizationalData.specialists,
-    ...organizationalData.mercorTeam
+  const agents: Agent[] = [
+    {
+      id: '001',
+      name: 'Agent Alpha',
+      status: 'active',
+      department: 'Software Development',
+      currentTask: 'Deploying mission control dashboard updates',
+      performance: 98.2,
+      uptime: '72h 14m',
+      lastUpdate: '2 mins ago',
+      tasksCompleted: 247,
+      errorRate: 0.8
+    },
+    {
+      id: '002',
+      name: 'Agent Beta',
+      status: 'idle',
+      department: 'Finance Operations',
+      currentTask: 'Monitoring market conditions, awaiting trading signal',
+      performance: 95.7,
+      uptime: '156h 33m',
+      lastUpdate: '5 mins ago',
+      tasksCompleted: 189,
+      errorRate: 1.2
+    },
+    {
+      id: '003',
+      name: 'Agent Gamma',
+      status: 'active',
+      department: 'Content Creation',
+      currentTask: 'Generating marketing presentation slides',
+      performance: 87.4,
+      uptime: '24h 8m',
+      lastUpdate: '1 min ago',
+      tasksCompleted: 156,
+      errorRate: 2.1
+    },
+    {
+      id: '004',
+      name: 'Agent Delta',
+      status: 'error',
+      department: 'System Operations',
+      currentTask: 'Error: Memory allocation exceeded during task execution',
+      performance: 92.1,
+      uptime: '8h 45m',
+      lastUpdate: '15 mins ago',
+      tasksCompleted: 203,
+      errorRate: 4.3
+    }
   ]
 
-  const stats = {
-    total: allAgents.length,
-    online: allAgents.filter(agent => agent.status === 'online').length,
-    busy: allAgents.filter(agent => agent.status === 'busy').length,
-    departments: 4
-  }
+  const activeAgents = agents.filter(a => a.status === 'active').length
+  const idleAgents = agents.filter(a => a.status === 'idle').length
+  const errorAgents = agents.filter(a => a.status === 'error').length
+
+  const selectedAgentData = selectedAgent ? agents.find(a => a.id === selectedAgent) : null
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div 
+      className="min-h-screen"
+      style={{ 
+        backgroundColor: googleStitchColors.neutral,
+        color: googleStitchColors.text.primary,
+        fontFamily: googleStitchTypography.fontFamily.primary
+      }}
+    >
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="rounded-lg p-2 hover:bg-slate-100 lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 p-2">
-                <Zap className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-slate-900">Agent Directory</h1>
-                <p className="text-sm text-slate-500">Organizational Structure · Live Status</p>
-              </div>
+      <header 
+        className="border-b px-6 py-4"
+        style={{ 
+          backgroundColor: googleStitchColors.surface.secondary,
+          borderColor: googleStitchColors.border.primary
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <MaterialIcon name="arrow_back" />
+              <span style={{ ...googleStitchTypography.body.medium, fontWeight: '500' }}>
+                Back to Dashboard
+              </span>
+            </Link>
+            
+            <div 
+              className="w-px h-6"
+              style={{ backgroundColor: googleStitchColors.border.primary }}
+            />
+            
+            <div>
+              <h1 
+                style={{ 
+                  ...googleStitchTypography.headline.small,
+                  fontWeight: '600',
+                  color: googleStitchColors.text.primary
+                }}
+              >
+                Agent Monitoring
+              </h1>
+              <p 
+                style={{ 
+                  ...googleStitchTypography.body.small,
+                  color: googleStitchColors.text.secondary
+                }}
+              >
+                Real-time agent status and performance tracking
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg border border-slate-200 bg-white p-1">
-              <button
-                onClick={() => setViewMode('hierarchy')}
-                className={`rounded px-3 py-1 text-sm font-medium transition ${
-                  viewMode === 'hierarchy' 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <GitBranch className="mr-1 inline h-4 w-4" />
-                Hierarchy
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`rounded px-3 py-1 text-sm font-medium transition ${
-                  viewMode === 'list' 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <LayoutGrid className="mr-1 inline h-4 w-4" />
-                List
-              </button>
-            </div>
+          
+          <div className="flex items-center gap-4">
+            <StitchButton variant="outlined" size="small">
+              <MaterialIcon name="refresh" />
+              Refresh
+            </StitchButton>
+            <StitchButton variant="primary">
+              <MaterialIcon name="add" />
+              Deploy Agent
+            </StitchButton>
           </div>
         </div>
       </header>
 
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 transform border-r border-slate-200 bg-white transition-transform lg:relative lg:translate-x-0`}>
-          <nav className="flex h-full flex-col">
-            <div className="p-4">
-              <div className="space-y-1">
-                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50">
-                  <LayoutGrid className="h-4 w-4" />
-                  Dashboard
-                </Link>
-                <a href="#" className="flex items-center gap-3 rounded-lg bg-blue-50 px-3 py-2 text-blue-700">
-                  <Bot className="h-4 w-4" />
-                  Agents
-                </a>
-                <Link href="/chart" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
-                  <GitBranch className="h-4 w-4" />
-                  Org Chart
-                </Link>
-                <button 
-                  onClick={() => setViewMode(viewMode === 'hierarchy' ? 'list' : 'hierarchy')}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
+      <div className="p-8">
+        {/* Overview Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          {[
+            { 
+              label: 'Total Agents', 
+              value: agents.length.toString(), 
+              icon: 'smart_toy', 
+              color: googleStitchColors.primary 
+            },
+            { 
+              label: 'Active', 
+              value: activeAgents.toString(), 
+              icon: 'play_circle_filled', 
+              color: googleStitchColors.tertiary 
+            },
+            { 
+              label: 'Idle', 
+              value: idleAgents.toString(), 
+              icon: 'pause_circle_filled', 
+              color: googleStitchColors.secondary 
+            },
+            { 
+              label: 'Errors', 
+              value: errorAgents.toString(), 
+              icon: 'error', 
+              color: googleStitchColors.error 
+            }
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="p-6 rounded-xl"
+              style={{
+                backgroundColor: googleStitchColors.surface.secondary,
+                border: `1px solid ${googleStitchColors.border.secondary}`
+              }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 
+                  className="uppercase tracking-wider"
+                  style={{ 
+                    ...googleStitchTypography.label.medium,
+                    color: googleStitchColors.text.secondary
+                  }}
                 >
-                  <Users className="h-4 w-4" />
-                  {viewMode === 'hierarchy' ? 'Switch to List' : 'Switch to Hierarchy'}
-                </button>
-                <button 
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Activity className="h-4 w-4" />
-                  Back to Top
-                </button>
-                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition">
-                  <Network className="h-4 w-4" />
-                  System Status
-                </Link>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 transition"
-                >
-                  <Settings className="h-4 w-4" />
-                  Refresh View
-                </button>
+                  {stat.label}
+                </h3>
+                <MaterialIcon 
+                  name={stat.icon}
+                  style={{ color: stat.color, fontSize: '20px' }}
+                />
+              </div>
+              <div 
+                className="mb-2"
+                style={{ 
+                  ...googleStitchTypography.headline.medium,
+                  color: googleStitchColors.text.primary,
+                  fontWeight: '600'
+                }}
+              >
+                {stat.value}
               </div>
             </div>
-          </nav>
-        </aside>
+          ))}
+        </div>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="p-8">
-            {/* Stats */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-4 mb-8">
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Agents</p>
-                    <p className="text-4xl font-bold text-slate-900 mt-2">{stats.total}</p>
-                  </div>
-                  <div className="rounded-lg bg-blue-50 p-3">
-                    <Bot className="h-6 w-6 text-blue-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Online</p>
-                    <p className="text-4xl font-bold text-emerald-600 mt-2">{stats.online}</p>
-                  </div>
-                  <div className="rounded-lg bg-emerald-50 p-3">
-                    <CheckCircle className="h-6 w-6 text-emerald-600" />
-                  </div>
-                </div>
-              </div>
+        {/* Agents Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+          {agents.map((agent) => (
+            <AgentCard
+              key={agent.id}
+              agent={agent}
+              isSelected={selectedAgent === agent.id}
+              onSelect={setSelectedAgent}
+            />
+          ))}
+        </div>
 
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Busy</p>
-                    <p className="text-4xl font-bold text-amber-600 mt-2">{stats.busy}</p>
-                  </div>
-                  <div className="rounded-lg bg-amber-50 p-3">
-                    <Clock className="h-6 w-6 text-amber-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Departments</p>
-                    <p className="text-4xl font-bold text-violet-600 mt-2">{stats.departments}</p>
-                  </div>
-                  <div className="rounded-lg bg-violet-50 p-3">
-                    <Building className="h-6 w-6 text-violet-600" />
-                  </div>
-                </div>
-              </div>
+        {/* Agent Details Panel */}
+        {selectedAgentData && (
+          <div
+            className="p-8 rounded-xl"
+            style={{
+              backgroundColor: googleStitchColors.surface.secondary,
+              border: `1px solid ${googleStitchColors.border.primary}`
+            }}
+          >
+            <div className="flex items-center justify-between mb-8">
+              <h2 
+                style={{ 
+                  ...googleStitchTypography.headline.medium,
+                  fontWeight: '600',
+                  color: googleStitchColors.text.primary
+                }}
+              >
+                {selectedAgentData.name} - Detailed View
+              </h2>
+              <StitchButton variant="outlined" onClick={() => setSelectedAgent(null)}>
+                <MaterialIcon name="close" />
+                Close
+              </StitchButton>
             </div>
-
-            {viewMode === 'hierarchy' ? (
-              <div className="space-y-8">
-                {/* CEO Level */}
-                <div>
-                  <div className="mb-6 flex items-center gap-3">
-                    <Crown className="h-6 w-6 text-amber-600" />
-                    <h2 className="text-2xl font-bold text-slate-900">Executive Level</h2>
-                  </div>
-                  <AgentCard agent={organizationalData.ceo} level="ceo" />
-                </div>
-
-                {/* Department Heads */}
-                <div>
-                  <div className="mb-6 flex items-center gap-3">
-                    <Briefcase className="h-6 w-6 text-blue-600" />
-                    <h2 className="text-2xl font-bold text-slate-900">Department Heads</h2>
-                  </div>
-                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-                    {organizationalData.departmentHeads.map((agent) => (
-                      <AgentCard key={agent.id} agent={agent} level="head" />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Mercor Project Division */}
-                <div>
-                  <div className="mb-6 flex items-center gap-3">
-                    <Target className="h-6 w-6 text-emerald-600" />
-                    <h2 className="text-2xl font-bold text-slate-900">Mercor Project Division</h2>
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">
-                      Under Pajimo
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Configuration */}
+              <div>
+                <h3 
+                  className="mb-4 uppercase tracking-wider"
+                  style={{ 
+                    ...googleStitchTypography.label.medium,
+                    color: googleStitchColors.text.secondary
+                  }}
+                >
+                  Configuration
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span style={{ color: googleStitchColors.text.tertiary }}>Agent ID</span>
+                    <span 
+                      className="font-mono"
+                      style={{ color: googleStitchColors.text.primary }}
+                    >
+                      {selectedAgentData.id}
                     </span>
                   </div>
-                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-                    {organizationalData.mercorTeam.map((agent) => (
-                      <AgentCard key={agent.id} agent={agent} level="team" showReportingLine />
-                    ))}
+                  <div className="flex justify-between">
+                    <span style={{ color: googleStitchColors.text.tertiary }}>Department</span>
+                    <span style={{ color: googleStitchColors.text.primary }}>
+                      {selectedAgentData.department}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: googleStitchColors.text.tertiary }}>Status</span>
+                    <span 
+                      className="capitalize"
+                      style={{ 
+                        color: selectedAgentData.status === 'active' ? googleStitchColors.tertiary :
+                               selectedAgentData.status === 'idle' ? googleStitchColors.secondary :
+                               googleStitchColors.error
+                      }}
+                    >
+                      {selectedAgentData.status}
+                    </span>
                   </div>
                 </div>
+              </div>
 
-                {/* Specialists */}
-                <div>
-                  <div className="mb-6 flex items-center gap-3">
-                    <Award className="h-6 w-6 text-violet-600" />
-                    <h2 className="text-2xl font-bold text-slate-900">Technical Specialists</h2>
-                  </div>
-                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-                    {organizationalData.specialists.map((agent) => (
-                      <AgentCard key={agent.id} agent={agent} level="specialist" showReportingLine />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
+              {/* Performance Metrics */}
               <div>
-                <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-slate-900">All Agents</h2>
-                  <p className="text-slate-600">Complete directory of organizational agents</p>
-                </div>
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  {allAgents.map((agent) => {
-                    const level = 
-                      agent.id === 'main' ? 'ceo' :
-                      organizationalData.departmentHeads.some(h => h.id === agent.id) ? 'head' :
-                      organizationalData.mercorTeam.some(m => m.id === agent.id) ? 'team' : 'specialist'
-                    
-                    return (
-                      <AgentCard 
-                        key={agent.id} 
-                        agent={agent} 
-                        level={level} 
-                        showReportingLine={level !== 'ceo' && level !== 'head'}
-                      />
-                    )
-                  })}
+                <h3 
+                  className="mb-4 uppercase tracking-wider"
+                  style={{ 
+                    ...googleStitchTypography.label.medium,
+                    color: googleStitchColors.text.secondary
+                  }}
+                >
+                  Performance
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span style={{ color: googleStitchColors.text.tertiary }}>Score</span>
+                    <span 
+                      className="font-mono"
+                      style={{ color: googleStitchColors.text.primary }}
+                    >
+                      {selectedAgentData.performance}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: googleStitchColors.text.tertiary }}>Uptime</span>
+                    <span 
+                      className="font-mono"
+                      style={{ color: googleStitchColors.text.primary }}
+                    >
+                      {selectedAgentData.uptime}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: googleStitchColors.text.tertiary }}>Tasks Completed</span>
+                    <span 
+                      className="font-mono"
+                      style={{ color: googleStitchColors.text.primary }}
+                    >
+                      {selectedAgentData.tasksCompleted}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span style={{ color: googleStitchColors.text.tertiary }}>Error Rate</span>
+                    <span 
+                      className="font-mono"
+                      style={{ color: googleStitchColors.text.primary }}
+                    >
+                      {selectedAgentData.errorRate}%
+                    </span>
+                  </div>
                 </div>
               </div>
-            )}
+
+              {/* Actions */}
+              <div>
+                <h3 
+                  className="mb-4 uppercase tracking-wider"
+                  style={{ 
+                    ...googleStitchTypography.label.medium,
+                    color: googleStitchColors.text.secondary
+                  }}
+                >
+                  Actions
+                </h3>
+                <div className="space-y-3">
+                  <StitchButton variant="primary" className="w-full justify-center">
+                    <MaterialIcon name="visibility" />
+                    View Logs
+                  </StitchButton>
+                  <StitchButton variant="outlined" className="w-full justify-center">
+                    <MaterialIcon name="refresh" />
+                    Restart Agent
+                  </StitchButton>
+                  <StitchButton variant="outlined" className="w-full justify-center">
+                    <MaterialIcon name="edit" />
+                    Edit Config
+                  </StitchButton>
+                </div>
+              </div>
+            </div>
           </div>
-        </main>
+        )}
       </div>
+
+      {/* Material Icons Font */}
+      <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"
+      />
     </div>
   )
 }

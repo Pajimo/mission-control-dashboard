@@ -1,5 +1,6 @@
-'use client'
+import GoogleStitchDashboard from './google-stitch-dashboard'
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react'
 import { 
   Bot, 
@@ -523,4 +524,8 @@ export default function CortexCommandCenter() {
       </div>
     </div>
   )
+=======
+export default function MissionControlPage() {
+  return <GoogleStitchDashboard />
+>>>>>>> 0a2c7e5f (Deploy Google Stitch Design System - URGENT CEO REQUEST)
 }
