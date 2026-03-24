@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #10b981);
+            border-radius: 16px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        p {
+            font-size: 1.125rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .status {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        .retry-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 0.5rem;
+        }
+        
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .features {
+            margin-top: 3rem;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+        
+        .feature::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">⚡</div>
+        
+        <h1>Mission Control</h1>
+        
+        <p>You're currently offline. Mission Control will reconnect automatically when your connection is restored.</p>
+        
+        <div class="status">
+            <span class="status-indicator"></span>
+            <strong>Connection Status:</strong> Offline
+        </div>
+        
+        <button class="retry-btn" onclick="retryConnection()">
+            🔄 Retry Connection
+        </button>
+        
+        <button class="retry-btn" onclick="goHome()" style="background: rgba(100, 116, 139, 0.2); border: 1px solid #475569;">
+            🏠 Go to Dashboard
+        </button>
+        
+        <div class="features">
+            <h3 style="color: #e2e8f0; margin-bottom: 1rem;">Available Offline Features:</h3>
+            <div class="feature">Cached dashboard data</div>
+            <div class="feature">Local session information</div>
+            <div class="feature">Performance metrics history</div>
+            <div class="feature">System status indicators</div>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-retry connection every 10 seconds
+        setInterval(retryConnection, 10000)
+        
+        function retryConnection() {
+            if (navigator.onLine) {
+                console.log('🌐 Connection restored, redirecting...')
+                window.location.href = '/'
+            } else {
+                console.log('🔍 Still offline, will retry...')
+            }
+        }
+        
+        function goHome() {
+            window.location.href = '/'
+        }
+        
+        // Listen for online events
+        window.addEventListener('online', () => {
+            console.log('✅ Back online!')
+            setTimeout(() => {
+                window.location.href = '/'
+            }, 1000)
+        })
+        
+        window.addEventListener('offline', () => {
+            console.log('📵 Gone offline')
+        })
+        
+        // Service worker messaging
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data.type === 'SYNC_COMPLETE') {
+                    console.log('🔄 Background sync complete')
+                    retryConnection()
+                }
+            })
+        }
+        
+        console.log('🎯 Mission Control Offline Page - Standing by for reconnection')
+    </script>
+</body>
+</html>
