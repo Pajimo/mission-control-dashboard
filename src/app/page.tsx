@@ -26,14 +26,57 @@ import {
   Gauge,
   BarChart3,
   Globe,
-  Layers
+  Layers,
+  Radio,
+  Target,
+  Radar,
+  Satellite,
+  Power,
+  HardDrive,
+  Monitor,
+  Wifi,
+  Server,
+  X,
+  Home,
+  Map,
+  Flag,
+  Search,
+  Bell,
+  User,
+  LogOut
 } from 'lucide-react'
 import Link from 'next/link'
 
-import { fetchDashboardData, type DashboardData } from './lib/api'
-import { RufloAgentGrid } from '@/components/RufloAgentGrid'
-import { SwarmCoordination } from '@/components/SwarmCoordination'
-import { PerformanceAnalytics } from '@/components/PerformanceAnalytics'
+// Mock data for Cortex Command interface
+const generateMockData = () => ({
+  agents: {
+    total: 47,
+    online: 42,
+    active: 28,
+    standby: 14,
+    offline: 5
+  },
+  missions: {
+    total: 156,
+    active: 23,
+    pending: 8,
+    completed: 125,
+    failed: 0
+  },
+  systems: {
+    cpu: 34,
+    memory: 62,
+    network: 98,
+    storage: 45
+  },
+  performance: {
+    throughput: 847.3,
+    latency: 12.5,
+    uptime: 99.8,
+    efficiency: 94.2
+  },
+  lastUpdated: new Date()
+})
 
 const formatNumber = (num: number) => {
   if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
@@ -41,502 +84,439 @@ const formatNumber = (num: number) => {
   return num.toString()
 }
 
-const formatRelativeTime = (date: Date) => {
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  
-  if (hours > 0) return `${hours}H`
-  if (minutes > 0) return `${minutes}M`
-  return 'NOW'
-}
-
 interface MetricCardProps {
   title: string
   value: string
-  secondary?: string
+  subtitle?: string
   icon: React.ReactNode
-  accent: 'primary' | 'secondary' | 'tertiary' | 'success'
-  info?: string
+  variant: 'primary' | 'secondary' | 'accent' | 'success'
+  trend?: {
+    value: number
+    label: string
+  }
 }
 
-const MetricCard = ({ title, value, secondary, icon, accent, info }: MetricCardProps) => {
-  const accentStyles: Record<MetricCardProps['accent'], string> = {
-    primary: 'cortex-gradient-primary',
-    secondary: 'cortex-gradient-secondary', 
-    tertiary: 'cortex-gradient-success',
-    success: 'cortex-gradient-success'
+const MetricCard = ({ title, value, subtitle, icon, variant, trend }: MetricCardProps) => {
+  const variants = {
+    primary: 'border-cortex-primary/30 bg-gradient-to-br from-cortex-bg-secondary to-cortex-bg-tertiary',
+    secondary: 'border-cortex-secondary/30 bg-gradient-to-br from-cortex-bg-secondary to-cortex-bg-tertiary',
+    accent: 'border-cortex-accent/30 bg-gradient-to-br from-cortex-bg-secondary to-cortex-bg-tertiary',
+    success: 'border-cortex-success/30 bg-gradient-to-br from-cortex-bg-secondary to-cortex-bg-tertiary'
   }
 
-  const iconStyles: Record<MetricCardProps['accent'], string> = {
-    primary: 'bg-cortex-primary-100 text-cortex-primary-600 border-cortex-primary-200',
-    secondary: 'bg-cortex-secondary-100 text-cortex-secondary-700 border-cortex-secondary-200',
-    tertiary: 'bg-cortex-tertiary-100 text-cortex-tertiary-700 border-cortex-tertiary-200',
-    success: 'bg-cortex-tertiary-100 text-cortex-tertiary-700 border-cortex-tertiary-200'
+  const iconVariants = {
+    primary: 'text-cortex-primary bg-cortex-primary/10',
+    secondary: 'text-cortex-secondary bg-cortex-secondary/10',
+    accent: 'text-cortex-accent bg-cortex-accent/10',
+    success: 'text-cortex-success bg-cortex-success/10'
   }
 
   return (
-    <div className="group relative overflow-hidden cortex-card cortex-card-interactive">
-      {/* Command Center Grid Pattern */}
-      <div className="absolute inset-0 bg-cortex-neutral-950/30 backdrop-blur-sm border-cortex-neutral-700/50" 
-           style={{
-             backgroundImage: `
-               linear-gradient(rgba(41, 98, 255, 0.1) 1px, transparent 1px),
-               linear-gradient(90deg, rgba(41, 98, 255, 0.1) 1px, transparent 1px)
-             `,
-             backgroundSize: '20px 20px'
-           }}>
-      </div>
-      
-      {/* Main Content */}
-      <div className="relative z-10 p-6 h-full">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            {/* Cortex Command Title */}
-            <div className="flex items-center gap-3 mb-3">
-              <div className={`h-1 w-8 ${accentStyles[accent]} rounded-full`}></div>
-              <h3 className="cortex-caption text-cortex-neutral-500 flex items-center gap-1">
-                {title}
-                {info && (
-                  <Info className="h-3 w-3 text-cortex-neutral-400 hover:text-cortex-primary-500 transition-colors cursor-help" />
-                )}
-              </h3>
-            </div>
-            
-            {/* Cortex Values */}
-            <div className="space-y-1">
-              <div className="cortex-heading-2 text-cortex-neutral-900 group-hover:text-cortex-primary-600 transition-colors">
-                {value}
-              </div>
-              {secondary && (
-                <div className="cortex-body-small text-cortex-neutral-500">
-                  {secondary}
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Cortex Icon */}
-          <div className={`relative p-3 rounded-xl border ${iconStyles[accent]} group-hover:scale-110 transition-transform`}>
-            <div className="relative z-10">{icon}</div>
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl"></div>
-          </div>
+    <div className={`cortex-card p-6 group hover:scale-105 transition-all duration-300 ${variants[variant]}`}>
+      <div className="flex items-start justify-between mb-4">
+        <div className={`p-3 rounded-lg ${iconVariants[variant]}`}>
+          {icon}
         </div>
-        
-        {/* Cortex Progress Bar */}
-        <div className="mt-4">
-          <div className="h-1 bg-cortex-neutral-200 rounded-full overflow-hidden">
-            <div className={`h-full ${accentStyles[accent]} rounded-full opacity-60 group-hover:opacity-100 transition-opacity`} 
-                 style={{ width: '75%' }}></div>
+        {trend && (
+          <div className={`text-xs font-medium ${trend.value >= 0 ? 'text-cortex-success' : 'text-cortex-danger'}`}>
+            {trend.value >= 0 ? '+' : ''}{trend.value}% {trend.label}
           </div>
-        </div>
+        )}
       </div>
-      
-      {/* Cortex Glow Effect */}
-      <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity rounded-xl ${accentStyles[accent]} blur-xl`}></div>
+      <div className="cortex-label mb-1">{title}</div>
+      <div className="cortex-metric-value text-2xl">{value}</div>
+      {subtitle && (
+        <div className="cortex-body-small text-cortex-text-tertiary mt-1">{subtitle}</div>
+      )}
     </div>
   )
 }
 
-interface InfoBlockProps {
-  title: string
-  badge?: {
-    text: string
-    tone: 'online' | 'offline' | 'neutral'
-  }
-  rows: Array<{
-    label: string
-    value: string
-    tone?: 'success' | 'warning' | 'danger' | 'default'
-  }>
+const SystemStatus = () => {
+  const [data, setData] = useState(generateMockData())
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setData(generateMockData())
+    }, 30000) // Update every 30 seconds
+    
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <MetricCard
+        title="AGENTS ONLINE"
+        value={`${data.agents.online}/${data.agents.total}`}
+        subtitle={`${data.agents.active} active missions`}
+        icon={<Bot className="h-6 w-6" />}
+        variant="primary"
+        trend={{ value: 2.3, label: '24h' }}
+      />
+      <MetricCard
+        title="ACTIVE MISSIONS"
+        value={data.missions.active.toString()}
+        subtitle={`${data.missions.pending} pending`}
+        icon={<Target className="h-6 w-6" />}
+        variant="secondary"
+        trend={{ value: 8.1, label: '1h' }}
+      />
+      <MetricCard
+        title="SYSTEM HEALTH"
+        value={`${data.performance.uptime}%`}
+        subtitle="All systems operational"
+        icon={<Activity className="h-6 w-6" />}
+        variant="success"
+        trend={{ value: 0.2, label: '1h' }}
+      />
+      <MetricCard
+        title="THROUGHPUT"
+        value={`${data.performance.throughput}/s`}
+        subtitle={`${data.performance.latency}ms latency`}
+        icon={<Zap className="h-6 w-6" />}
+        variant="accent"
+        trend={{ value: 12.7, label: '15m' }}
+      />
+    </div>
+  )
 }
 
-const InfoBlock = ({ title, badge, rows }: InfoBlockProps) => {
-  const badgeStyles = {
-    online: 'cortex-badge-success',
-    offline: 'cortex-badge-danger', 
-    neutral: 'cortex-badge-neutral'
-  }
-
-  const rowStyles = {
-    success: 'text-cortex-success',
-    warning: 'text-cortex-warning',
-    danger: 'text-cortex-danger',
-    default: 'text-cortex-neutral-800'
-  }
+const QuickActions = () => {
+  const actions = [
+    { icon: <Target className="h-4 w-4" />, label: 'New Mission', href: '/missions/new' },
+    { icon: <Bot className="h-4 w-4" />, label: 'Deploy Agent', href: '/agents/deploy' },
+    { icon: <Terminal className="h-4 w-4" />, label: 'Command Console', href: '/console' },
+    { icon: <BarChart3 className="h-4 w-4" />, label: 'System Report', href: '/reports' },
+  ]
 
   return (
     <div className="cortex-card p-6">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="cortex-heading-4 text-cortex-neutral-900">{title}</h3>
-        {badge && (
-          <span className={`cortex-badge ${badgeStyles[badge.tone]}`}>
-            {badge.text}
-          </span>
-        )}
-      </div>
-      <div className="cortex-card border-cortex-neutral-200 bg-surface-primary overflow-hidden">
-        {rows.map((row, index: number) => (
-          <div key={index} className={`flex items-start justify-between gap-3 px-4 py-3 ${
-            index !== rows.length - 1 ? 'border-b border-cortex-neutral-100' : ''
-          }`}>
-            <span className="cortex-body-small text-cortex-neutral-500 min-w-0 flex-1">
-              {row.label}
-            </span>
-            <span className={`cortex-label text-right max-w-[65%] break-words ${
-              rowStyles[row.tone || 'default']
-            }`}>
-              {row.value}
-            </span>
-          </div>
+      <h3 className="cortex-heading-2 mb-4">Quick Actions</h3>
+      <div className="grid grid-cols-2 gap-3">
+        {actions.map((action, index) => (
+          <Link
+            key={index}
+            href={action.href}
+            className="cortex-btn cortex-btn-outline flex items-center gap-2 p-3 text-sm"
+          >
+            {action.icon}
+            {action.label}
+          </Link>
         ))}
       </div>
     </div>
   )
 }
 
-export default function CortexCommandDashboard() {
-  const [data, setData] = useState<DashboardData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export default function CortexCommandCenter() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [data, setData] = useState(generateMockData())
 
-  // Fetch data function
-  const fetchData = async () => {
-    try {
-      setIsRefreshing(true)
-      const dashboardData = await fetchDashboardData()
-      setData(dashboardData)
-      setError(null)
-      setLoading(false)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch data')
-      setLoading(false)
-    } finally {
-      setIsRefreshing(false)
-    }
-  }
-
-  // Initial load and auto-refresh every 30 seconds
   useEffect(() => {
-    fetchData()
-    
-    const interval = setInterval(fetchData, 30000) // 30 seconds as requested
+    // Auto-refresh data every 30 seconds
+    const interval = setInterval(() => {
+      setData(generateMockData())
+    }, 30000)
     
     return () => clearInterval(interval)
   }, [])
 
-  if (loading && !data) {
-    return (
-      <div className="min-h-screen bg-cortex-neutral-950 flex items-center justify-center">
-        <div className="text-center cortex-fade-in">
-          <div className="cortex-gradient-primary rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-8 animate-pulse">
-            <Command className="h-10 w-10 text-white" />
-          </div>
-          <h1 className="cortex-heading-3 text-white mb-2">CORTEX COMMAND</h1>
-          <p className="cortex-body-large text-cortex-neutral-300 mb-4">Initializing Command Center</p>
-          <div className="flex items-center justify-center gap-2 cortex-body-small text-cortex-neutral-400">
-            <div className="cortex-status-dot cortex-status-info animate-pulse"></div>
-            Establishing secure connections...
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (error && !data) {
-    return (
-      <div className="min-h-screen bg-cortex-neutral-950 flex items-center justify-center">
-        <div className="text-center cortex-fade-in">
-          <div className="bg-cortex-danger rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-8">
-            <AlertTriangle className="h-10 w-10 text-white" />
-          </div>
-          <h1 className="cortex-heading-3 text-cortex-danger mb-2">COMMAND CENTER ERROR</h1>
-          <p className="cortex-body text-cortex-neutral-300 mb-6">{error}</p>
-          <button onClick={fetchData} className="cortex-btn-primary cortex-btn-lg">
-            Retry Connection
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  if (!data) return null
-
-  const workloadRows: InfoBlockProps['rows'] = [
-    { label: 'Total Operations', value: formatNumber(data.tasks.total) },
-    { label: 'Inbox', value: formatNumber(data.tasks.inbox) },
-    { label: 'Active Missions', value: formatNumber(data.tasks.inProgress), tone: data.tasks.inProgress > 0 ? 'warning' as const : 'default' as const },
-    { label: 'Under Review', value: formatNumber(data.tasks.review) },
-    { label: 'Completed', value: formatNumber(data.tasks.completed), tone: 'success' as const }
-  ]
-
-  const performanceRows: InfoBlockProps['rows'] = [
-    { label: 'Completed Operations', value: formatNumber(data.tasks.completed) },
-    { label: 'Command Throughput', value: `${data.performance.completionRate.toFixed(1)}/day` },
-    { label: 'System Reliability', value: `${(100 - data.performance.errorRate).toFixed(1)}%`, tone: data.performance.errorRate < 2 ? 'success' as const : 'warning' as const },
-    { label: 'Response Time', value: `${data.performance.averageResponse.toFixed(0)}ms` },
-    { label: 'Command Status', value: 'Operational', tone: 'success' as const }
-  ]
-
-  const gatewayRows: InfoBlockProps['rows'] = [
-    { label: 'Network Status', value: data.gateways.status === 'operational' ? 'All Connected' : 'Issues Detected', tone: data.gateways.status === 'operational' ? 'success' as const : 'warning' as const },
-    { label: 'Active Gateways', value: formatNumber(data.gateways.total) },
-    { label: 'Online Nodes', value: formatNumber(data.gateways.connected), tone: 'success' as const },
-    { label: 'Offline Nodes', value: String(data.gateways.total - data.gateways.connected), tone: data.gateways.total === data.gateways.connected ? 'success' as const : 'warning' as const },
-    { label: 'System Uptime', value: data.system.uptime, tone: 'success' as const }
-  ]
-
   return (
-    <div className="min-h-screen bg-cortex-neutral-950" style={{
-      backgroundImage: `
-        radial-gradient(circle at 25% 25%, rgba(41, 98, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(255, 179, 0, 0.1) 0%, transparent 50%),
-        linear-gradient(135deg, rgba(0, 230, 118, 0.05) 0%, transparent 100%)
-      `
-    }}>
-      {/* Cortex Command Header */}
-      <header className="relative z-50 bg-cortex-neutral-900/80 backdrop-blur-xl border-b border-cortex-neutral-700/50 sticky top-0">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="cortex-btn-ghost p-2 lg:hidden"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="cortex-gradient-primary rounded-xl p-3 shadow-cortex-glow-primary">
-                  <Command className="h-8 w-8 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-cortex-success rounded-full border-2 border-cortex-neutral-950 animate-pulse"></div>
-              </div>
-              <div>
-                <h1 className="cortex-heading-3 text-white">
-                  CORTEX COMMAND CENTER
-                </h1>
-                <div className="cortex-body-small text-cortex-neutral-300 flex items-center gap-2">
-                  <div className="cortex-status-dot cortex-status-online animate-pulse"></div>
-                  Live Dynamic Data · Professional Command Interface
-                </div>
-              </div>
+    <div className="min-h-screen bg-cortex-bg-primary cortex-grid-bg">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* CORTEX COMMAND SIDEBAR */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-80 cortex-sidebar transform transition-transform duration-300 ease-in-out lg:translate-x-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        {/* Sidebar Header */}
+        <div className="cortex-sidebar-header">
+          <div className="cortex-sidebar-logo">
+            <div className="cortex-sidebar-logo-icon">
+              <Command className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <div className="cortex-sidebar-brand-text">CORTEX COMMAND</div>
+              <div className="cortex-sidebar-subtitle">Mission Control Center</div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={fetchData}
-              disabled={isRefreshing}
-              className="cortex-btn-outlined cortex-btn-sm"
-            >
-              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Refreshing' : 'Refresh'}
-            </button>
-            <div className="cortex-badge-success flex items-center gap-2">
-              <div className="cortex-status-dot cortex-status-online animate-pulse"></div>
-              Command Active
+          
+          {/* Command Status Indicator */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="cortex-status-dot cortex-status-online cortex-pulse"></div>
+              <span className="cortex-body-small text-cortex-success">SYSTEM ONLINE</span>
+            </div>
+            <div className="cortex-body-small text-cortex-text-tertiary">
+              {data.lastUpdated.toLocaleTimeString()}
             </div>
           </div>
         </div>
-      </header>
 
-      <div className="flex">
-        {/* Cortex Navigation Sidebar */}
-        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          fixed inset-y-0 left-0 z-40 w-64 transform border-r border-cortex-neutral-700/50 
-          bg-cortex-neutral-900/90 backdrop-blur-xl transition-transform lg:relative lg:translate-x-0 shadow-cortex-xl`}>
-          <nav className="flex h-full flex-col">
-            <div className="p-4 border-b border-cortex-neutral-700/50">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="cortex-gradient-primary rounded-lg p-2">
-                  <Shield className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <p className="cortex-label text-white">Command Center</p>
-                  <p className="cortex-caption text-cortex-neutral-400">Professional Interface</p>
-                </div>
-              </div>
-              
-              <div className="space-y-1">
-                <a href="#" className="cortex-nav-item active">
-                  <LayoutGrid className="h-4 w-4" />
-                  Dashboard
-                </a>
-                <Link href="/agents" className="cortex-nav-item">
-                  <Bot className="h-4 w-4" />
-                  AI Agents
-                </Link>
-                <Link href="/teams" className="cortex-nav-item">
-                  <Users className="h-4 w-4" />
-                  Teams
-                </Link>
-                <a href="#" className="cortex-nav-item">
-                  <BarChart3 className="h-4 w-4" />
-                  Analytics
-                </a>
-                <a href="#" className="cortex-nav-item">
-                  <Network className="h-4 w-4" />
-                  Gateways
-                </a>
-                <a href="#" className="cortex-nav-item">
-                  <Terminal className="h-4 w-4" />
-                  Console
-                </a>
-                <Link href="/system" className="cortex-nav-item">
-                  <Settings className="h-4 w-4" />
-                  System
-                </Link>
+        {/* Navigation */}
+        <nav className="cortex-nav flex-1">
+          {/* Primary Navigation */}
+          <div className="cortex-nav-section">
+            <div className="cortex-nav-section-title">Command Center</div>
+            <Link href="/" className="cortex-nav-item active">
+              <Home className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Dashboard</span>
+            </Link>
+            <Link href="/missions" className="cortex-nav-item">
+              <Target className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Missions</span>
+              <span className="cortex-nav-item-badge">{data.missions.active}</span>
+            </Link>
+            <Link href="/agents" className="cortex-nav-item">
+              <Bot className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">AI Agents</span>
+              <span className="cortex-nav-item-badge">{data.agents.online}</span>
+            </Link>
+            <Link href="/radar" className="cortex-nav-item">
+              <Radar className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Tactical Radar</span>
+            </Link>
+          </div>
+
+          {/* Operations */}
+          <div className="cortex-nav-section">
+            <div className="cortex-nav-section-title">Operations</div>
+            <Link href="/teams" className="cortex-nav-item">
+              <Users className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Strike Teams</span>
+            </Link>
+            <Link href="/intelligence" className="cortex-nav-item">
+              <Search className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Intelligence</span>
+            </Link>
+            <Link href="/communications" className="cortex-nav-item">
+              <Radio className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Communications</span>
+            </Link>
+            <Link href="/mapping" className="cortex-nav-item">
+              <Map className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Tactical Map</span>
+            </Link>
+          </div>
+
+          {/* Systems */}
+          <div className="cortex-nav-section">
+            <div className="cortex-nav-section-title">Systems</div>
+            <Link href="/network" className="cortex-nav-item">
+              <Network className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Network Grid</span>
+            </Link>
+            <Link href="/servers" className="cortex-nav-item">
+              <Server className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Server Farm</span>
+            </Link>
+            <Link href="/monitoring" className="cortex-nav-item">
+              <Monitor className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">System Monitor</span>
+            </Link>
+            <Link href="/console" className="cortex-nav-item">
+              <Terminal className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Console</span>
+            </Link>
+          </div>
+
+          {/* Analytics */}
+          <div className="cortex-nav-section">
+            <div className="cortex-nav-section-title">Analytics</div>
+            <Link href="/analytics" className="cortex-nav-item">
+              <BarChart3 className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Performance</span>
+            </Link>
+            <Link href="/reports" className="cortex-nav-item">
+              <Flag className="cortex-nav-item-icon" />
+              <span className="cortex-nav-item-text">Battle Reports</span>
+            </Link>
+          </div>
+        </nav>
+
+        {/* Sidebar Footer */}
+        <div className="cortex-sidebar-footer">
+          <div className="cortex-user-profile">
+            <div className="cortex-user-avatar">
+              <User className="h-4 w-4" />
+            </div>
+            <div className="cortex-user-info">
+              <div className="cortex-user-name">Commander MideSquare</div>
+              <div className="cortex-user-role">Chief Executive Officer</div>
+            </div>
+            <button className="cortex-btn-ghost p-2">
+              <Settings className="h-4 w-4" />
+            </button>
+          </div>
+          
+          <div className="flex items-center justify-between mt-4">
+            <button className="cortex-btn cortex-btn-outline cortex-btn text-xs">
+              <Bell className="h-3 w-3" />
+              Alerts
+            </button>
+            <button className="cortex-btn cortex-btn-ghost cortex-btn text-xs">
+              <LogOut className="h-3 w-3" />
+              Exit
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="lg:ml-80">
+        {/* Command Header */}
+        <header className="bg-cortex-bg-secondary/80 backdrop-blur-xl border-b border-cortex-border sticky top-0 z-30">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="cortex-btn cortex-btn-ghost p-2 lg:hidden"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <div>
+                <h1 className="cortex-heading-brand">MISSION CONTROL</h1>
+                <p className="cortex-body-small text-cortex-text-tertiary">
+                  Real-time Command & Control Interface
+                </p>
               </div>
             </div>
             
-            {/* Command Status */}
-            <div className="mt-auto p-4 border-t border-cortex-neutral-700/50">
-              <div className="cortex-card p-3 bg-cortex-neutral-800/50 border-cortex-neutral-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="cortex-status-dot cortex-status-online animate-pulse"></div>
-                  <p className="cortex-caption text-cortex-neutral-300">System Status</p>
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <Cpu className="h-4 w-4 text-cortex-primary" />
+                  <span className="text-cortex-text-secondary">CPU: {data.systems.cpu}%</span>
                 </div>
-                <p className="cortex-body-small text-cortex-success font-medium">All Systems Operational</p>
-              </div>
-            </div>
-          </nav>
-        </aside>
-
-        {/* Main Cortex Interface */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="p-8">
-            {/* Cortex Metrics Grid */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 mb-8">
-              <MetricCard
-                title="AGENTS ONLINE"
-                value={formatNumber(data.agents.online)}
-                secondary={`${formatNumber(data.agents.total)} total agents`}
-                icon={<Bot className="h-5 w-5" />}
-                accent="primary"
-              />
-              <MetricCard
-                title="ACTIVE MISSIONS"
-                value={formatNumber(data.tasks.inProgress)}
-                secondary={`${formatNumber(data.tasks.total)} total operations`}
-                icon={<Layers className="h-5 w-5" />}
-                accent="secondary"
-              />
-              <MetricCard
-                title="SYSTEM HEALTH"
-                value={`${(100 - data.performance.errorRate).toFixed(1)}%`}
-                secondary={`${formatNumber(data.tasks.completed)} completed`}
-                icon={<Activity className="h-5 w-5" />}
-                accent="success"
-              />
-              <MetricCard
-                title="THROUGHPUT"
-                value={`${data.performance.completionRate.toFixed(1)}/day`}
-                secondary="Command efficiency"
-                icon={<Timer className="h-5 w-5" />}
-                accent="tertiary"
-                info="Based on last 7 days performance"
-              />
-            </div>
-
-            {/* Cortex Information Blocks */}
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-3 mb-8">
-              <InfoBlock
-                title="Mission Control Operations"
-                rows={workloadRows}
-              />
-              <InfoBlock
-                title="Command Performance"
-                rows={performanceRows}
-              />
-              <InfoBlock
-                title="Gateway Network"
-                badge={{ 
-                  text: data.gateways.status === 'operational' ? 'All Connected' : 'Issues Detected', 
-                  tone: data.gateways.status === 'operational' ? 'online' : 'offline' 
-                }}
-                rows={gatewayRows}
-              />
-            </div>
-
-            {/* Advanced Components */}
-            <div className="space-y-8">
-              {/* Ruflo Agent Grid */}
-              <div className="cortex-card p-6">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="cortex-heading-4 text-cortex-neutral-900 flex items-center gap-2">
-                    <Bot className="h-5 w-5 text-cortex-primary-600" />
-                    Agent Command Grid
-                  </h3>
-                  <Link href="/agents" className="cortex-btn-outlined cortex-btn-sm">
-                    <Eye className="h-4 w-4" />
-                    View All
-                  </Link>
+                <div className="flex items-center gap-2">
+                  <Database className="h-4 w-4 text-cortex-secondary" />
+                  <span className="text-cortex-text-secondary">MEM: {data.systems.memory}%</span>
                 </div>
-                <RufloAgentGrid />
-              </div>
-
-              {/* Performance Analytics */}
-              <div className="cortex-card p-6">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="cortex-heading-4 text-cortex-neutral-900 flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-cortex-secondary-600" />
-                    Command Analytics
-                  </h3>
-                  <button className="cortex-btn-ghost cortex-btn-sm">
-                    <ArrowUpRight className="h-4 w-4" />
-                    Full Report
-                  </button>
+                <div className="flex items-center gap-2">
+                  <Wifi className="h-4 w-4 text-cortex-success" />
+                  <span className="text-cortex-text-secondary">NET: {data.systems.network}%</span>
                 </div>
-                <PerformanceAnalytics />
               </div>
-
-              {/* Swarm Coordination */}
-              <div className="cortex-card p-6">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="cortex-heading-4 text-cortex-neutral-900 flex items-center gap-2">
-                    <Network className="h-5 w-5 text-cortex-tertiary-600" />
-                    Swarm Coordination
-                  </h3>
-                  <div className="cortex-badge-primary">
-                    {data.sessions.length} Active
-                  </div>
-                </div>
-                <SwarmCoordination />
-              </div>
+              
+              <button className="cortex-btn cortex-btn-primary">
+                <RefreshCw className="h-4 w-4" />
+                Sync Data
+              </button>
             </div>
+          </div>
+        </header>
 
-            {/* Cortex Command Status Bar */}
-            <div className="mt-8 cortex-card p-6 bg-cortex-neutral-900/50 border-cortex-neutral-700">
-              <div className="flex items-center justify-between gap-4 flex-wrap">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-3">
-                    <div className="cortex-status-dot cortex-status-online animate-pulse"></div>
-                    <span className="cortex-label text-white">
-                      CORTEX COMMAND STATUS: <span className="text-cortex-success">{data.system.gatewayStatus.toUpperCase()}</span>
-                    </span>
-                  </div>
-                  <div className="hidden md:flex items-center gap-6 cortex-body-small text-cortex-neutral-400">
-                    <div className="flex items-center gap-2">
-                      <Cpu className="h-4 w-4 text-cortex-primary-500" />
-                      <span>CPU: <span className="font-medium text-white">{data.system.cpuUsage}%</span></span>
+        {/* Main Dashboard Content */}
+        <main className="p-6 space-y-6">
+          {/* System Metrics */}
+          <SystemStatus />
+
+          {/* Command Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            {/* Mission Status */}
+            <div className="cortex-card p-6 xl:col-span-2">
+              <h3 className="cortex-heading-2 mb-4 flex items-center gap-2">
+                <Target className="h-5 w-5 text-cortex-primary" />
+                Active Missions
+              </h3>
+              <div className="space-y-3">
+                {[
+                  { id: 'M-001', name: 'Operation Thunderstrike', status: 'active', progress: 75, agent: 'Alpha-7' },
+                  { id: 'M-002', name: 'Data Extraction Phoenix', status: 'pending', progress: 0, agent: 'Beta-3' },
+                  { id: 'M-003', name: 'Network Infiltration', status: 'active', progress: 43, agent: 'Gamma-1' },
+                  { id: 'M-004', name: 'Tactical Reconnaissance', status: 'completed', progress: 100, agent: 'Delta-9' },
+                ].map((mission) => (
+                  <div key={mission.id} className="flex items-center justify-between p-4 bg-cortex-bg-tertiary rounded-lg border border-cortex-border">
+                    <div className="flex items-center gap-3">
+                      <div className={`cortex-status-dot ${
+                        mission.status === 'active' ? 'cortex-status-info cortex-pulse' :
+                        mission.status === 'completed' ? 'cortex-status-online' :
+                        'cortex-status-warning'
+                      }`}></div>
+                      <div>
+                        <div className="font-medium text-cortex-text-primary">{mission.name}</div>
+                        <div className="cortex-body-small text-cortex-text-tertiary">{mission.id} • Agent {mission.agent}</div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Database className="h-4 w-4 text-cortex-secondary-600" />
-                      <span>MEM: <span className="font-medium text-white">{data.system.memoryUsage}%</span></span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Network className="h-4 w-4 text-cortex-tertiary-600" />
-                      <span>NET: <span className="font-medium text-cortex-success">{data.system.networkStatus.toUpperCase()}</span></span>
+                    <div className="text-right">
+                      <div className="cortex-body-small text-cortex-text-secondary">{mission.progress}%</div>
+                      <div className="w-20 h-2 bg-cortex-bg-primary rounded-full mt-1">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            mission.status === 'completed' ? 'bg-cortex-success' :
+                            mission.status === 'active' ? 'bg-cortex-primary' :
+                            'bg-cortex-warning'
+                          }`}
+                          style={{ width: `${mission.progress}%` }}
+                        ></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="text-right cortex-body-small text-cortex-neutral-400">
-                  <p>Last Update: <span className="font-medium text-white">{data.lastUpdated.toLocaleTimeString()}</span></p>
-                  <p>Uptime: <span className="font-medium text-cortex-success">{data.system.uptime}</span></p>
-                </div>
+                ))}
               </div>
+            </div>
+
+            {/* Quick Actions */}
+            <QuickActions />
+          </div>
+
+          {/* Network Status Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div className="cortex-card p-6 text-center">
+              <div className="cortex-sidebar-logo-icon mx-auto mb-4">
+                <Server className="h-6 w-6" />
+              </div>
+              <div className="cortex-heading-3 text-cortex-primary">47</div>
+              <div className="cortex-label">Active Servers</div>
+            </div>
+            
+            <div className="cortex-card p-6 text-center">
+              <div className="cortex-sidebar-logo-icon mx-auto mb-4 bg-cortex-secondary/20">
+                <Network className="h-6 w-6 text-cortex-secondary" />
+              </div>
+              <div className="cortex-heading-3 text-cortex-secondary">12</div>
+              <div className="cortex-label">Gateway Nodes</div>
+            </div>
+            
+            <div className="cortex-card p-6 text-center">
+              <div className="cortex-sidebar-logo-icon mx-auto mb-4 bg-cortex-accent/20">
+                <Satellite className="h-6 w-6 text-cortex-accent" />
+              </div>
+              <div className="cortex-heading-3 text-cortex-accent">8</div>
+              <div className="cortex-label">Satellite Links</div>
+            </div>
+            
+            <div className="cortex-card p-6 text-center">
+              <div className="cortex-sidebar-logo-icon mx-auto mb-4 bg-cortex-success/20">
+                <Shield className="h-6 w-6 text-cortex-success" />
+              </div>
+              <div className="cortex-heading-3 text-cortex-success">100%</div>
+              <div className="cortex-label">Security Status</div>
+            </div>
+          </div>
+
+          {/* Command Terminal Simulation */}
+          <div className="cortex-card p-6">
+            <h3 className="cortex-heading-2 mb-4 flex items-center gap-2">
+              <Terminal className="h-5 w-5 text-cortex-accent" />
+              Command Terminal
+            </h3>
+            <div className="bg-cortex-bg-primary rounded-lg p-4 font-mono text-sm">
+              <div className="text-cortex-success">[CORTEX@COMMAND]$ system status --all</div>
+              <div className="text-cortex-text-secondary mt-2">
+                ✓ All agents online and responsive<br/>
+                ✓ Network grid operational at 98% capacity<br/>
+                ✓ Mission pipeline processing normally<br/>
+                ✓ No security breaches detected<br/>
+              </div>
+              <div className="text-cortex-primary mt-2">[CORTEX@COMMAND]$ █</div>
             </div>
           </div>
         </main>
